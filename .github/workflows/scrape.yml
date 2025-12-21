@@ -27,6 +27,7 @@ jobs:
       
       - name: Run scraper
         run: npm run scrape
+        continue-on-error: false
       
       - name: Commit and push changes
         run: |
@@ -35,7 +36,8 @@ jobs:
           git add data.json
           if ! git diff --staged --quiet; then
             git commit -m "Update scraped data - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
-            git push
+            git pull --rebase || true
+            git push || (git pull --rebase && git push)
           else
             echo "No changes to commit"
           fi

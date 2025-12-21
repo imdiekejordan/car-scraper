@@ -46,21 +46,9 @@ exports.handler = async (event) => {
       throw new Error('Failed to commit to GitHub');
     }
 
-    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/scrape.yml/dispatches`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${GITHUB_TOKEN}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ref: 'main'
-      })
-    });
-
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true })
+      body: JSON.stringify({ success: true, message: 'URLs updated. Scraper will run on next scheduled run (every 15 minutes).' })
     };
   } catch (error) {
     return {
