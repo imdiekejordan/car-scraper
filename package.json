@@ -1,0 +1,17 @@
+{
+  "name": "k-bid-scraper",
+  "version": "1.0.0",
+  "description": "Automated web scraper for K-Bid auction items",
+  "main": "scraper.js",
+  "scripts": {
+    "scrape": "node scraper.js"
+  },
+  "keywords": ["scraper", "k-bid", "auction"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12"
+  }
+}
+

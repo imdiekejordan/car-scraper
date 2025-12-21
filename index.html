@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auction Monitor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 0;
+        }
+        
+        .main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .stats {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .table-wrapper {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background-color: #ecf0f1;
+        }
+        
+        th {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #2c3e50;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #ecf0f1;
+            vertical-align: middle;
+        }
+        
+        tbody tr {
+            transition: background-color 0.15s ease;
+        }
+        
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .item-name {
+            font-weight: 500;
+            color: #2c3e50;
+            max-width: 400px;
+        }
+        
+        .item-name.error {
+            color: #e74c3c;
+            font-style: italic;
+        }
+        
+        .price {
+            font-weight: 600;
+            color: #27ae60;
+            font-size: 1.1rem;
+        }
+        
+        .price.na {
+            color: #95a5a6;
+            font-weight: normal;
+        }
+        
+        .link {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background-color 0.15s ease;
+        }
+        
+        .link:hover {
+            background-color: #2980b9;
+        }
+        
+        .timestamp {
+            color: #7f8c8d;
+            font-size: 0.875rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #7f8c8d;
+        }
+        
+        .error-message {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 1rem 1.25rem;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+            font-size: 0.875rem;
+        }
+        
+        .url-manager {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .url-manager-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+        
+        .url-manager-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .url-manager-content {
+            display: none;
+        }
+        
+        .url-manager-content.active {
+            display: block;
+        }
+        
+        .url-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .url-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .url-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        
+        .url-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .url-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: #f8f9fa;
+            border: 1px solid #ecf0f1;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .url-list-item-url {
+            flex: 1;
+            font-size: 0.9rem;
+            color: #2c3e50;
+            word-break: break-all;
+            margin-right: 1rem;
+        }
+        
+        .toggle-icon {
+            transition: transform 0.2s ease;
+        }
+        
+        .toggle-icon.rotated {
+            transform: rotate(180deg);
+        }
+        
+        @media (max-width: 768px) {
+            .main {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+            
+            th, td {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="url-manager">
+            <div class="url-manager-header" onclick="toggleUrlManager()">
+                <h2>Manage URLs</h2>
+                <span class="toggle-icon" id="toggleIcon">▼</span>
+            </div>
+            <div class="url-manager-content" id="urlManagerContent">
+                <div class="url-form">
+                    <input type="text" class="url-input" id="newUrlInput" placeholder="Enter auction URL (e.g., https://www.k-bid.com/auction/62603/item/8)">
+                    <button class="btn btn-primary" onclick="addUrl()">Add URL</button>
+                </div>
+                <ul class="url-list" id="urlList"></ul>
+            </div>
+        </div>
+        
+        <div id="error" class="error-message" style="display: none;"></div>
+        
+        <div id="loading" class="loading">Loading auction data...</div>
+        
+        <div id="content" style="display: none;">
+            <div class="stats" id="stats">
+                <div class="stat-item">
+                    <span class="stat-label">Total Items</span>
+                    <span class="stat-value" id="totalItems">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Last Updated</span>
+                    <span class="stat-value" id="lastUpdatedTime">-</span>
+                </div>
+            </div>
+            
+            <div class="table-wrapper">
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Current Price</th>
+                            <th>Last Updated</th>
+                            <th>Link</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        Data updates automatically every 15 minutes
+    </div>
+    
+    <script>
+        // URL Management Functions
+        const STORAGE_KEY = 'auction_urls';
+        
+        function getUrls() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                return JSON.parse(stored);
+            }
+            // Try to load from urls.json file
+            return [];
+        }
+        
+        function saveUrls(urls) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(urls));
+            renderUrlList();
+        }
+        
+        function toggleUrlManager() {
+            const content = document.getElementById('urlManagerContent');
+            const icon = document.getElementById('toggleIcon');
+            content.classList.toggle('active');
+            icon.classList.toggle('rotated');
+            
+            if (content.classList.contains('active')) {
+                // Only load from file if localStorage is empty, otherwise use what's already there
+                const existingUrls = getUrls();
+                if (existingUrls.length === 0) {
+                    loadUrlsFromFile();
+                } else {
+                    renderUrlList();
+                }
+            }
+        }
+        
+        function addUrl() {
+            const input = document.getElementById('newUrlInput');
+            const url = input.value.trim();
+            
+            if (!url) {
+                return;
+            }
+            
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                alert('URL must start with http:// or https://');
+                return;
+            }
+            
+            const urls = getUrls();
+            if (urls.includes(url)) {
+                alert('This URL is already in the list');
+                return;
+            }
+            
+            urls.push(url);
+            saveUrls(urls);
+            input.value = '';
+            input.focus();
+            loadData();
+        }
+        
+        function removeUrl(urlToRemove) {
+            const urls = getUrls();
+            const filteredUrls = urls.filter(url => url !== urlToRemove);
+            if (filteredUrls.length !== urls.length) {
+                saveUrls(filteredUrls);
+                loadData();
+            }
+        }
+        
+        function renderUrlList() {
+            const urls = getUrls();
+            const list = document.getElementById('urlList');
+            list.innerHTML = '';
+            
+            if (urls.length === 0) {
+                list.innerHTML = '<li style="padding: 0.75rem; color: #7f8c8d; font-style: italic;">No URLs added yet</li>';
+                return;
+            }
+            
+            urls.forEach(url => {
+                const li = document.createElement('li');
+                li.className = 'url-list-item';
+                
+                const urlSpan = document.createElement('span');
+                urlSpan.className = 'url-list-item-url';
+                urlSpan.textContent = url;
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'btn btn-danger';
+                deleteBtn.textContent = 'Remove';
+                deleteBtn.onclick = () => removeUrl(url);
+                
+                li.appendChild(urlSpan);
+                li.appendChild(deleteBtn);
+                list.appendChild(li);
+            });
+        }
+        
+        async function loadUrlsFromFile() {
+            try {
+                const response = await fetch('urls.json');
+                if (response.ok) {
+                    const urls = await response.json();
+                    saveUrls(urls);
+                }
+            } catch (error) {
+                console.error('Error loading urls.json:', error);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('newUrlInput');
+            if (input) {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        addUrl();
+                    }
+                });
+            }
+            const urls = getUrls();
+            if (urls.length === 0) {
+                loadUrlsFromFile();
+            } else {
+                renderUrlList();
+            }
+        });
+        
+        function formatDate(date) {
+            return new Date(date).toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        function formatTime(date) {
+            return new Date(date).toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+        
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to load data: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                // Get managed URLs from localStorage
+                const managedUrls = getUrls();
+                
+                // Filter items to only show those in the managed URLs list
+                const filteredItems = data.items ? data.items.filter(item => managedUrls.includes(item.url)) : [];
+                
+                // Update stats
+                if (filteredItems.length > 0) {
+                    document.getElementById('totalItems').textContent = filteredItems.length;
+                    if (data.lastUpdated) {
+                        document.getElementById('lastUpdatedTime').textContent = formatTime(data.lastUpdated);
+                    }
+                } else {
+                    document.getElementById('totalItems').textContent = '0';
+                }
+                
+                // Populate table
+                const tbody = document.getElementById('resultsBody');
+                tbody.innerHTML = '';
+                
+                if (filteredItems.length > 0) {
+                    filteredItems.forEach(item => {
+                        const row = document.createElement('tr');
+                        
+                        const nameCell = document.createElement('td');
+                        nameCell.className = 'item-name';
+                        nameCell.textContent = item.itemName || 'Unknown Item';
+                        if (item.error) {
+                            nameCell.classList.add('error');
+                        }
+                        
+                        const priceCell = document.createElement('td');
+                        priceCell.className = 'price';
+                        if (item.currentPrice === 'N/A' || !item.currentPrice) {
+                            priceCell.classList.add('na');
+                            priceCell.textContent = 'N/A';
+                        } else {
+                            priceCell.textContent = item.currentPrice;
+                        }
+                        
+                        const timestampCell = document.createElement('td');
+                        timestampCell.className = 'timestamp';
+                        if (item.timestamp) {
+                            timestampCell.textContent = formatDate(item.timestamp);
+                        } else {
+                            timestampCell.textContent = 'N/A';
+                        }
+                        
+                        const linkCell = document.createElement('td');
+                        const link = document.createElement('a');
+                        link.href = item.url;
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+                        link.className = 'link';
+                        link.textContent = 'View';
+                        linkCell.appendChild(link);
+                        
+                        row.appendChild(nameCell);
+                        row.appendChild(priceCell);
+                        row.appendChild(timestampCell);
+                        row.appendChild(linkCell);
+                        
+                        tbody.appendChild(row);
+                    });
+                    
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('content').style.display = 'block';
+                } else {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('content').style.display = 'block';
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem; color: #7f8c8d;">No items to display. Add URLs in the Manage URLs section above.</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        loadData();
+        setInterval(loadData, 5 * 60 * 1000);
+    </script>
+</body>
+</html>
