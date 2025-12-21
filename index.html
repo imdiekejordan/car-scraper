@@ -898,9 +898,9 @@
                 if (!response.ok) {
                     if (response.status === 404) {
                         console.error('data.json not found. The scraper may not have run yet.');
-                        document.getElementById('statusMessage').textContent = 'No data available yet. The scraper will run every 15 minutes.';
-                        document.getElementById('statusMessage').style.display = 'block';
-                        document.getElementById('statusMessage').style.color = '#e74c3c';
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('error').style.display = 'block';
+                        document.getElementById('error').textContent = 'No data available yet. The scraper will run every 15 minutes. If this is your first time, wait for the next scheduled run or trigger it manually.';
                         return;
                     }
                     throw new Error(`Failed to load data: ${response.status} ${response.statusText}`);
