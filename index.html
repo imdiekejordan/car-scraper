@@ -230,6 +230,30 @@
             margin-bottom: 1.5rem;
         }
         
+        .url-list-wrapper {
+            overflow-x: auto;
+            overflow-y: visible;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 -1.5rem;
+            padding: 0 1.5rem;
+        }
+        
+        .url-list {
+            min-width: 600px;
+        }
+        
+        @media (max-width: 768px) {
+            .url-list-wrapper {
+                margin: 0 -1rem;
+                padding: 0 1rem;
+            }
+            
+            .url-list-header,
+            .url-list-item {
+                min-width: 600px;
+            }
+        }
+        
         .url-manager-header {
             display: flex;
             justify-content: space-between;
@@ -314,25 +338,28 @@
         .url-list {
             list-style: none;
             margin-bottom: 1.5rem;
+            min-width: 600px;
         }
         
-        .url-list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            background: #f8f9fa;
-            border: 1px solid #ecf0f1;
-            border-radius: 4px;
-            margin-bottom: 0.5rem;
+        .url-list-wrapper {
+            overflow-x: auto;
+            overflow-y: visible;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 -1.5rem;
+            padding: 0 1.5rem;
+        }
+        
+        
+        .url-list-item-name {
+            font-size: 0.9rem;
+            color: #2c3e50;
+            font-weight: 500;
         }
         
         .url-list-item-url {
-            flex: 1;
             font-size: 0.9rem;
             color: #2c3e50;
             word-break: break-all;
-            margin-right: 1rem;
         }
         
         .toggle-icon {
@@ -352,6 +379,16 @@
             .table-wrapper {
                 margin: 0;
                 border-radius: 4px;
+            }
+            
+            .url-list-wrapper {
+                margin: 0 -1rem;
+                padding: 0 1rem;
+            }
+            
+            .url-list-header,
+            .url-list-item {
+                min-width: 600px;
             }
             
             th, td {
@@ -420,7 +457,19 @@
                     <input type="text" class="url-input" id="newUrlInput" placeholder="Enter auction URL (e.g., https://www.k-bid.com/auction/62603/item/8)">
                     <button class="btn btn-primary" onclick="addUrl()">Add URL</button>
                 </div>
-                <ul class="url-list" id="urlList"></ul>
+                <div class="url-list-wrapper">
+                    <table class="url-list-table">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>action</th>
+                                <th>URL</th>
+                            </tr>
+                        </thead>
+                        <tbody id="urlList">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -442,7 +491,7 @@
         
         async function saveUrls(urls) {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(urls));
-            renderUrlList();
+            await renderUrlList();
             
             try {
                 const response = await fetch('/.netlify/functions/update-urls', {
@@ -461,7 +510,7 @@
             }
         }
         
-        function toggleUrlManager() {
+        async function toggleUrlManager() {
             const content = document.getElementById('urlManagerContent');
             const icon = document.getElementById('toggleIcon');
             content.classList.toggle('active');
@@ -473,7 +522,7 @@
                 if (existingUrls.length === 0) {
                     loadUrlsFromFile();
                 } else {
-                    renderUrlList();
+                    await renderUrlList();
                 }
             }
         }
@@ -513,33 +562,69 @@
             }
         }
         
-        function renderUrlList() {
+        async function renderUrlList() {
             const urls = getUrls();
             const list = document.getElementById('urlList');
             list.innerHTML = '';
             
-            if (urls.length === 0) {
-                list.innerHTML = '<li style="padding: 0.75rem; color: #7f8c8d; font-style: italic;">No URLs added yet</li>';
-                return;
+            
+            // Fetch item data to get item names
+            let itemData = {};
+            try {
+                const response = await fetch('data.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.items) {
+                        data.items.forEach(item => {
+                            itemData[item.url] = item.itemName || 'Unknown Item';
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading item data:', error);
             }
             
-            urls.forEach(url => {
-                const li = document.createElement('li');
-                li.className = 'url-list-item';
-                
-                const urlSpan = document.createElement('span');
-                urlSpan.className = 'url-list-item-url';
-                urlSpan.textContent = url;
-                
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'btn btn-danger';
-                deleteBtn.textContent = 'Remove';
-                deleteBtn.onclick = () => removeUrl(url);
-                
-                li.appendChild(urlSpan);
-                li.appendChild(deleteBtn);
-                list.appendChild(li);
-            });
+            // Add URL items as table rows
+            if (urls.length === 0) {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 3;
+                cell.style.textAlign = 'center';
+                cell.style.padding = '2rem';
+                cell.style.color = '#7f8c8d';
+                cell.style.fontStyle = 'italic';
+                cell.textContent = 'No URLs added yet';
+                row.appendChild(cell);
+                list.appendChild(row);
+            } else {
+                urls.forEach(url => {
+                    const row = document.createElement('tr');
+                    
+                    const nameCell = document.createElement('td');
+                    nameCell.className = 'url-list-item-name';
+                    nameCell.textContent = itemData[url] || 'Not scraped yet';
+                    if (!itemData[url]) {
+                        nameCell.style.color = '#95a5a6';
+                        nameCell.style.fontStyle = 'italic';
+                    }
+                    
+                    const actionCell = document.createElement('td');
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'btn btn-danger';
+                    deleteBtn.textContent = 'Remove';
+                    deleteBtn.onclick = () => removeUrl(url);
+                    actionCell.appendChild(deleteBtn);
+                    
+                    const urlCell = document.createElement('td');
+                    urlCell.className = 'url-list-item-url';
+                    urlCell.textContent = url;
+                    
+                    row.appendChild(nameCell);
+                    row.appendChild(actionCell);
+                    row.appendChild(urlCell);
+                    list.appendChild(row);
+                });
+            }
         }
         
         async function loadUrlsFromFile() {
