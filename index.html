@@ -490,8 +490,9 @@
         }
         
         let isSaving = false;
+        let isScraping = false;
         
-        async function saveUrls(urls) {
+        async function saveUrls(urls, skipLoadData = false) {
             if (isSaving) {
                 console.log('Already saving URLs, skipping duplicate call');
                 return;
@@ -510,7 +511,7 @@
                     body: JSON.stringify({ urls })
                 });
                 
-                if (response.ok) {
+                if (response.ok && !skipLoadData && !isScraping) {
                     setTimeout(() => loadData(), 3000);
                 }
             } catch (error) {
@@ -537,7 +538,7 @@
             }
         }
         
-        function addUrl() {
+        async function addUrl() {
             const input = document.getElementById('newUrlInput');
             const url = input.value.trim();
             
@@ -557,17 +558,122 @@
             }
             
             urls.push(url);
-            saveUrls(urls);
+            await saveUrls(urls, true); // Skip loadData to avoid duplicate calls
             input.value = '';
             input.focus();
+            
+            // Find URLs that haven't been scraped yet
+            let itemData = {};
+            try {
+                const response = await fetch('data.json?t=' + Date.now());
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.items) {
+                        data.items.forEach(item => {
+                            itemData[item.url] = true;
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading item data:', error);
+            }
+            
+            // Get unscraped URLs
+            const unscrapedUrls = urls.filter(u => !itemData[u]);
+            
+            // Scrape unscraped URLs one by one
+            if (unscrapedUrls.length > 0) {
+                isScraping = true;
+                await scrapeUrlsOneByOne(unscrapedUrls);
+                isScraping = false;
+            }
+            
             loadData();
         }
         
-        function removeUrl(urlToRemove) {
+        async function scrapeUrlsOneByOne(urlsToScrape) {
+            for (let i = 0; i < urlsToScrape.length; i++) {
+                const url = urlsToScrape[i];
+                
+                // Update the URL list to show "Scraping..."
+                await renderUrlList();
+                const urlRows = document.querySelectorAll('#urlList tr');
+                urlRows.forEach(row => {
+                    const urlCell = row.querySelector('.url-list-item-url');
+                    if (urlCell && urlCell.textContent === url) {
+                        const nameCell = row.querySelector('.url-list-item-name');
+                        if (nameCell) {
+                            nameCell.textContent = 'Scraping...';
+                            nameCell.style.color = '#3498db';
+                        }
+                    }
+                });
+                
+                try {
+                    // Scrape the URL
+                    const scrapeResponse = await fetch('/.netlify/functions/scrape-urls', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ urls: [url] })
+                    });
+                    
+                    if (scrapeResponse.ok) {
+                        const scrapeData = await scrapeResponse.json();
+                        if (scrapeData.items && scrapeData.items.length > 0) {
+                            // Update data.json with the scraped item
+                            const updateResponse = await fetch('/.netlify/functions/update-data', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ items: scrapeData.items })
+                            });
+                            
+                            if (updateResponse.ok) {
+                                // Update the display immediately
+                                await renderUrlList();
+                                // Only load data on the last item to avoid too many calls
+                                if (i === urlsToScrape.length - 1) {
+                                    loadData();
+                                }
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error scraping ${url}:`, error);
+                }
+            }
+            
+            // Final load after all scraping is done
+            loadData();
+        }
+        
+        async function removeUrl(urlToRemove) {
             const urls = getUrls();
             const filteredUrls = urls.filter(url => url !== urlToRemove);
             if (filteredUrls.length !== urls.length) {
-                saveUrls(filteredUrls);
+                // Remove from localStorage
+                await saveUrls(filteredUrls);
+                
+                // Remove from data.json
+                try {
+                    const response = await fetch('/.netlify/functions/update-data', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ removeUrl: urlToRemove })
+                    });
+                    
+                    if (!response.ok) {
+                        console.error('Error removing URL from data.json');
+                    }
+                } catch (error) {
+                    console.error('Error removing URL from data.json:', error);
+                }
+                
                 loadData();
             }
         }
@@ -1021,11 +1127,39 @@
                 
                 if (response.ok) {
                     btn.textContent = 'Update Triggered!';
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                        btn.disabled = false;
-                        setTimeout(() => loadData(), 30000);
-                    }, 2000);
+                    
+                    // Poll for updates every 5 seconds, up to 2 minutes
+                    let attempts = 0;
+                    const maxAttempts = 24; // 2 minutes / 5 seconds
+                    const pollInterval = setInterval(async () => {
+                        attempts++;
+                        try {
+                            const dataResponse = await fetch('data.json?t=' + Date.now());
+                            if (dataResponse.ok) {
+                                const data = await dataResponse.json();
+                                const lastUpdated = new Date(data.lastUpdated);
+                                const now = new Date();
+                                const diff = now - lastUpdated;
+                                
+                                // If data was updated in the last 2 minutes, it's fresh
+                                if (diff < 120000) {
+                                    clearInterval(pollInterval);
+                                    btn.textContent = originalText;
+                                    btn.disabled = false;
+                                    loadData();
+                                }
+                            }
+                        } catch (error) {
+                            console.error('Error polling for updates:', error);
+                        }
+                        
+                        if (attempts >= maxAttempts) {
+                            clearInterval(pollInterval);
+                            btn.textContent = originalText;
+                            btn.disabled = false;
+                            loadData();
+                        }
+                    }, 5000);
                 } else {
                     throw new Error('Failed to trigger update');
                 }
