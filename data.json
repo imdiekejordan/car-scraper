@@ -1,84 +1,55 @@
 {
-<<<<<<< HEAD
   "lastUpdated": "2025-12-21T08:43:44.478Z",
-=======
-  "lastUpdated": "2025-12-21T08:47:15.157Z",
->>>>>>> 6b550da2f9d53e344e1744da4382a8e58dbce458
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
       "itemName": "2008 Volkswagen Passat Komfort 2.0 TSI",
       "currentPrice": "$525.00",
-<<<<<<< HEAD
       "nextRequiredBid": "$575.00",
       "lotFees": 334.12,
       "buyersPremium": 78.75,
       "closingTime": "2025-12-22T02:18:04.003Z",
       "timestamp": "2025-12-21T08:43:45.003Z"
-=======
-      "closingTime": "2025-12-22T02:18:00.658Z",
-      "timestamp": "2025-12-21T08:47:15.658Z"
->>>>>>> 6b550da2f9d53e344e1744da4382a8e58dbce458
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/8",
       "itemName": "2011 Jeep Grand Cherokee Laredo 4x4",
       "currentPrice": "$1,000.00",
-<<<<<<< HEAD
       "nextRequiredBid": "$1,050.00",
       "lotFees": 434.3,
       "buyersPremium": 150,
       "closingTime": "2025-12-22T01:47:04.173Z",
       "timestamp": "2025-12-21T08:43:47.173Z"
-=======
-      "closingTime": "2025-12-22T01:47:00.846Z",
-      "timestamp": "2025-12-21T08:47:16.846Z"
->>>>>>> 6b550da2f9d53e344e1744da4382a8e58dbce458
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/18",
       "itemName": "2011 Chevrolet Malibu LS",
       "currentPrice": "$750.00",
-<<<<<<< HEAD
       "nextRequiredBid": "$800.00",
       "lotFees": 417.1,
       "buyersPremium": 112.5,
       "closingTime": "2025-12-22T01:57:04.338Z",
       "timestamp": "2025-12-21T08:43:49.338Z"
-=======
-      "closingTime": "2025-12-22T01:57:01.006Z",
-      "timestamp": "2025-12-21T08:47:18.006Z"
->>>>>>> 6b550da2f9d53e344e1744da4382a8e58dbce458
     },
     {
       "url": "https://www.k-bid.com/auction/62481/item/4",
       "itemName": "2009 Toyota Highlander 4X4",
       "currentPrice": "$701.00",
-<<<<<<< HEAD
       "nextRequiredBid": "$751.00",
       "lotFees": 391.7288,
       "buyersPremium": 105.15,
       "closingTime": "2025-12-22T02:08:04.518Z",
       "timestamp": "2025-12-21T08:43:51.518Z"
-=======
-      "closingTime": "2025-12-22T02:08:00.184Z",
-      "timestamp": "2025-12-21T08:47:19.184Z"
->>>>>>> 6b550da2f9d53e344e1744da4382a8e58dbce458
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/14",
       "itemName": "2014 Volkswagen Passat Treadline",
       "currentPrice": "$1,001.99",
-<<<<<<< HEAD
       "nextRequiredBid": "$1,076.99",
       "lotFees": 434.436912,
       "buyersPremium": 150.2985,
       "closingTime": "2025-12-22T01:53:03.695Z",
       "timestamp": "2025-12-21T08:43:53.695Z"
-=======
-      "closingTime": "2025-12-22T01:53:00.355Z",
-      "timestamp": "2025-12-21T08:47:20.355Z"
->>>>>>> 6b550da2f9d53e344e1744da4382a8e58dbce458
     }
   ]
 }
