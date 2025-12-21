@@ -527,7 +527,7 @@
             }
         }
         
-        function addUrl() {
+        async function addUrl() {
             const input = document.getElementById('newUrlInput');
             const url = input.value.trim();
             
@@ -547,10 +547,12 @@
             }
             
             urls.push(url);
-            saveUrls(urls);
+            await saveUrls(urls);
             input.value = '';
             input.focus();
-            loadData();
+            
+            // Trigger scrape after adding URL
+            await triggerUpdate();
         }
         
         function removeUrl(urlToRemove) {
@@ -997,9 +999,11 @@
         
         async function triggerUpdate() {
             const btn = document.getElementById('updateBtn');
-            const originalText = btn.textContent;
-            btn.textContent = 'Updating...';
-            btn.disabled = true;
+            const originalText = btn ? btn.textContent : '';
+            if (btn) {
+                btn.textContent = 'Updating...';
+                btn.disabled = true;
+            }
             
             try {
                 const response = await fetch('/.netlify/functions/trigger-scrape', {
@@ -1010,22 +1014,49 @@
                 });
                 
                 if (response.ok) {
-                    btn.textContent = 'Update Triggered!';
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                        btn.disabled = false;
-                        setTimeout(() => loadData(), 30000);
-                    }, 2000);
+                    if (btn) {
+                        btn.textContent = 'Update Triggered!';
+                        setTimeout(() => {
+                            btn.textContent = originalText;
+                            btn.disabled = false;
+                            setTimeout(() => loadData(), 30000);
+                        }, 2000);
+                    } else {
+                        // Called from addUrl, show status message
+                        const statusMsg = document.getElementById('statusMessage');
+                        if (statusMsg) {
+                            statusMsg.textContent = 'Scrape triggered! Data will update in ~30 seconds.';
+                            statusMsg.style.display = 'block';
+                            statusMsg.style.color = '#27ae60';
+                            setTimeout(() => {
+                                statusMsg.style.display = 'none';
+                                setTimeout(() => loadData(), 30000);
+                            }, 3000);
+                        }
+                    }
                 } else {
                     throw new Error('Failed to trigger update');
                 }
             } catch (error) {
                 console.error('Error triggering update:', error);
-                btn.textContent = 'Error - Try Again';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.disabled = false;
-                }, 2000);
+                if (btn) {
+                    btn.textContent = 'Error - Try Again';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                    }, 2000);
+                } else {
+                    // Show error in status message
+                    const statusMsg = document.getElementById('statusMessage');
+                    if (statusMsg) {
+                        statusMsg.textContent = 'Error triggering scrape. Please try the Update button.';
+                        statusMsg.style.display = 'block';
+                        statusMsg.style.color = '#e74c3c';
+                        setTimeout(() => {
+                            statusMsg.style.display = 'none';
+                        }, 3000);
+                    }
+                }
             }
         }
         
