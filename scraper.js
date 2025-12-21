@@ -131,8 +131,8 @@ async function scrapeItem(url, retries = 3) {
     let lotFees = 0;
     let buyersPremium = 0;
     
-    const bodyText = $('body').text();
     const pageTitle = $('title').text();
+    const bodyText = $('body').text();
     
     // Find all lot fees - look for fee section with "Applicable Lot Fees"
     const feeSection = $('[id*="lot_fees"], [class*="lot"], [class*="fee"]').filter((i, el) => {
@@ -276,7 +276,7 @@ async function scrapeItem(url, retries = 3) {
     let closingTime = '';
     
     // Search in multiple places for countdown timer
-    const bodyText = $('body').text();
+    // bodyText is already declared above, reuse it
     let countdownText = '';
     let days = 0;
     
