@@ -755,7 +755,7 @@
             }
         }
         
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const input = document.getElementById('newUrlInput');
             if (input) {
                 input.addEventListener('keypress', (e) => {
@@ -784,11 +784,14 @@
                 });
             });
             
+            // Sync URLs from file on page load to ensure consistency
+            await syncUrlsFromFile();
+            
             const urls = getUrls();
             if (urls.length === 0) {
-                loadUrlsFromFile();
+                await loadUrlsFromFile();
             } else {
-                renderUrlList();
+                await renderUrlList();
             }
         });
         
@@ -1007,9 +1010,31 @@
             });
         }
         
+        async function syncUrlsFromFile() {
+            try {
+                const response = await fetch('urls.json?t=' + Date.now());
+                if (response.ok) {
+                    const fileUrls = await response.json();
+                    const localUrls = getUrls();
+                    
+                    // If localStorage is empty or different, sync it
+                    if (localUrls.length === 0 || JSON.stringify(localUrls.sort()) !== JSON.stringify(fileUrls.sort())) {
+                        console.log('Syncing URLs from file to localStorage');
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(fileUrls));
+                    }
+                }
+            } catch (error) {
+                console.error('Error syncing URLs from file:', error);
+            }
+        }
+        
         async function loadData() {
             try {
-                const response = await fetch('data.json');
+                // Sync URLs first to ensure we have the latest list
+                await syncUrlsFromFile();
+                
+                // Add cache busting to ensure fresh data
+                const response = await fetch('data.json?t=' + Date.now());
                 
                 if (!response.ok) {
                     if (response.status === 404) {
