@@ -214,6 +214,109 @@
             margin: 1.5rem 0;
         }
         
+        .status-bar {
+            background: #e8f4f8;
+            border: 1px solid #3498db;
+            border-radius: 4px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .status-bar.active {
+            display: flex;
+        }
+        
+        .status-bar.info {
+            background: #e8f4f8;
+            border-color: #3498db;
+            color: #2980b9;
+        }
+        
+        .status-bar.success {
+            background: #d4edda;
+            border-color: #27ae60;
+            color: #155724;
+        }
+        
+        .status-bar.warning {
+            background: #fff3cd;
+            border-color: #f39c12;
+            color: #856404;
+        }
+        
+        .status-bar.error {
+            background: #fee;
+            border-color: #e74c3c;
+            color: #c33;
+        }
+        
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            flex-shrink: 0;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status-text {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+        
+        .status-close {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+        }
+        
+        .status-close:hover {
+            opacity: 1;
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn.loading {
+            position: relative;
+            color: transparent;
+        }
+        
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid #ffffff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        
         .footer {
             text-align: center;
             padding: 2rem;
@@ -409,6 +512,12 @@
 </head>
 <body>
     <div class="main">
+        <div id="statusBar" class="status-bar">
+            <div class="spinner"></div>
+            <div class="status-text" id="statusText">Processing...</div>
+            <button class="status-close" onclick="hideStatus()">×</button>
+        </div>
+        
         <div id="error" class="error-message" style="display: none;"></div>
         
         <div id="loading" class="loading">Loading auction data...</div>
@@ -492,6 +601,29 @@
         let isSaving = false;
         let isScraping = false;
         
+        function showStatus(message, type = 'info', autoHide = false) {
+            const statusBar = document.getElementById('statusBar');
+            const statusText = document.getElementById('statusText');
+            statusBar.className = `status-bar active ${type}`;
+            statusText.textContent = message;
+            
+            if (autoHide) {
+                setTimeout(() => hideStatus(), 3000);
+            }
+        }
+        
+        function hideStatus() {
+            const statusBar = document.getElementById('statusBar');
+            statusBar.classList.remove('active');
+        }
+        
+        function updateLoadingText(text) {
+            const loadingEl = document.getElementById('loading');
+            if (loadingEl) {
+                loadingEl.textContent = text;
+            }
+        }
+        
         async function saveUrls(urls, skipLoadData = false) {
             if (isSaving) {
                 console.log('Already saving URLs, skipping duplicate call');
@@ -547,16 +679,17 @@
             }
             
             if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                alert('URL must start with http:// or https://');
+                showStatus('URL must start with http:// or https://', 'error', true);
                 return;
             }
             
             const urls = getUrls();
             if (urls.includes(url)) {
-                alert('This URL is already in the list');
+                showStatus('This URL is already in the list', 'warning', true);
                 return;
             }
             
+            showStatus('Adding URL...', 'info');
             urls.push(url);
             await saveUrls(urls, true); // Skip loadData to avoid duplicate calls
             input.value = '';
@@ -565,6 +698,7 @@
             // Find URLs that haven't been scraped yet
             let itemData = {};
             try {
+                showStatus('Checking which URLs need scraping...', 'info');
                 const response = await fetch('data.json?t=' + Date.now());
                 if (response.ok) {
                     const data = await response.json();
@@ -584,8 +718,12 @@
             // Scrape unscraped URLs one by one
             if (unscrapedUrls.length > 0) {
                 isScraping = true;
+                showStatus(`Scraping ${unscrapedUrls.length} URL${unscrapedUrls.length > 1 ? 's' : ''}...`, 'info');
                 await scrapeUrlsOneByOne(unscrapedUrls);
                 isScraping = false;
+                showStatus('URL added and scraped successfully!', 'success', true);
+            } else {
+                showStatus('URL added successfully!', 'success', true);
             }
             
             loadData();
@@ -594,6 +732,7 @@
         async function scrapeUrlsOneByOne(urlsToScrape) {
             for (let i = 0; i < urlsToScrape.length; i++) {
                 const url = urlsToScrape[i];
+                const total = urlsToScrape.length;
                 
                 // Update the URL list to show "Scraping..."
                 await renderUrlList();
@@ -609,6 +748,8 @@
                     }
                 });
                 
+                showStatus(`Scraping URL ${i + 1} of ${total}...`, 'info');
+                
                 try {
                     // Scrape the URL
                     const scrapeResponse = await fetch('/.netlify/functions/scrape-urls', {
@@ -622,6 +763,8 @@
                     if (scrapeResponse.ok) {
                         const scrapeData = await scrapeResponse.json();
                         if (scrapeData.items && scrapeData.items.length > 0) {
+                            showStatus(`Saving data for URL ${i + 1} of ${total}...`, 'info');
+                            
                             // Update data.json with the scraped item
                             const updateResponse = await fetch('/.netlify/functions/update-data', {
                                 method: 'POST',
@@ -638,11 +781,16 @@
                                 if (i === urlsToScrape.length - 1) {
                                     loadData();
                                 }
+                            } else {
+                                showStatus(`Error saving data for URL ${i + 1}`, 'error');
                             }
                         }
+                    } else {
+                        showStatus(`Error scraping URL ${i + 1}`, 'error');
                     }
                 } catch (error) {
                     console.error(`Error scraping ${url}:`, error);
+                    showStatus(`Error scraping URL ${i + 1}: ${error.message}`, 'error');
                 }
             }
             
@@ -654,11 +802,14 @@
             const urls = getUrls();
             const filteredUrls = urls.filter(url => url !== urlToRemove);
             if (filteredUrls.length !== urls.length) {
+                showStatus('Removing URL...', 'info');
+                
                 // Remove from localStorage
                 await saveUrls(filteredUrls);
                 
                 // Remove from data.json
                 try {
+                    showStatus('Removing from data...', 'info');
                     const response = await fetch('/.netlify/functions/update-data', {
                         method: 'POST',
                         headers: {
@@ -669,9 +820,13 @@
                     
                     if (!response.ok) {
                         console.error('Error removing URL from data.json');
+                        showStatus('Error removing URL from data', 'error', true);
+                    } else {
+                        showStatus('URL removed successfully!', 'success', true);
                     }
                 } catch (error) {
                     console.error('Error removing URL from data.json:', error);
+                    showStatus('Error removing URL: ' + error.message, 'error', true);
                 }
                 
                 loadData();
@@ -1021,18 +1176,24 @@
                     if (localUrls.length === 0 || JSON.stringify(localUrls.sort()) !== JSON.stringify(fileUrls.sort())) {
                         console.log('Syncing URLs from file to localStorage');
                         localStorage.setItem(STORAGE_KEY, JSON.stringify(fileUrls));
+                        if (localUrls.length !== fileUrls.length) {
+                            showStatus(`Synced ${fileUrls.length} URLs from server`, 'info', true);
+                        }
                     }
                 }
             } catch (error) {
                 console.error('Error syncing URLs from file:', error);
+                // Don't show error for sync failures, it's not critical
             }
         }
         
         async function loadData() {
             try {
+                updateLoadingText('Syncing URLs...');
                 // Sync URLs first to ensure we have the latest list
                 await syncUrlsFromFile();
                 
+                updateLoadingText('Loading auction data...');
                 // Add cache busting to ensure fresh data
                 const response = await fetch('data.json?t=' + Date.now());
                 
@@ -1141,6 +1302,9 @@
             const originalText = btn.textContent;
             btn.textContent = 'Updating...';
             btn.disabled = true;
+            btn.classList.add('loading');
+            
+            showStatus('Triggering GitHub Actions workflow...', 'info');
             
             try {
                 const response = await fetch('/.netlify/functions/trigger-scrape', {
@@ -1151,13 +1315,25 @@
                 });
                 
                 if (response.ok) {
-                    btn.textContent = 'Update Triggered!';
+                    const result = await response.json();
+                    if (result.success === false) {
+                        showStatus(result.message || 'A scrape is already running', 'warning');
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                        btn.classList.remove('loading');
+                        return;
+                    }
+                    
+                    showStatus('Workflow triggered! Waiting for scrape to complete (this may take 30-60 seconds)...', 'info');
+                    btn.textContent = 'Waiting...';
                     
                     // Poll for updates every 5 seconds, up to 2 minutes
                     let attempts = 0;
                     const maxAttempts = 24; // 2 minutes / 5 seconds
                     const pollInterval = setInterval(async () => {
                         attempts++;
+                        showStatus(`Waiting for scrape to complete... (${attempts * 5} seconds)`, 'info');
+                        
                         try {
                             const dataResponse = await fetch('data.json?t=' + Date.now());
                             if (dataResponse.ok) {
@@ -1171,6 +1347,8 @@
                                     clearInterval(pollInterval);
                                     btn.textContent = originalText;
                                     btn.disabled = false;
+                                    btn.classList.remove('loading');
+                                    showStatus('Update complete! Data refreshed.', 'success', true);
                                     loadData();
                                 }
                             }
@@ -1182,19 +1360,21 @@
                             clearInterval(pollInterval);
                             btn.textContent = originalText;
                             btn.disabled = false;
+                            btn.classList.remove('loading');
+                            showStatus('Update timed out. Data may still be processing.', 'warning', true);
                             loadData();
                         }
                     }, 5000);
                 } else {
-                    throw new Error('Failed to trigger update');
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || 'Failed to trigger update');
                 }
             } catch (error) {
                 console.error('Error triggering update:', error);
                 btn.textContent = 'Error - Try Again';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.disabled = false;
-                }, 2000);
+                btn.disabled = false;
+                btn.classList.remove('loading');
+                showStatus('Error: ' + error.message, 'error', true);
             }
         }
         
