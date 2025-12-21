@@ -1,26 +1,6 @@
 {
-  "lastUpdated": "2025-12-21T17:08:33.114Z",
+  "lastUpdated": "2025-12-21T17:15:48.893Z",
   "items": [
-    {
-      "url": "https://www.k-bid.com/auction/62483/item/4",
-      "itemName": "2008 Volkswagen Passat Komfort 2.0 TSI",
-      "currentPrice": "$525.00",
-      "nextRequiredBid": "$575.00",
-      "lotFees": 334.12,
-      "buyersPremium": 78.75,
-      "closingTime": null,
-      "timestamp": "2025-12-21T16:55:51.946Z"
-    },
-    {
-      "url": "https://www.k-bid.com/auction/62603/item/18",
-      "itemName": "2011 Chevrolet Malibu LS",
-      "currentPrice": "$750.00",
-      "nextRequiredBid": "$800.00",
-      "lotFees": 417.1,
-      "buyersPremium": 112.5,
-      "closingTime": "2025-12-28T23:59:59.999Z",
-      "timestamp": "2025-12-21T16:55:56.266Z"
-    },
     {
       "url": "https://www.k-bid.com/auction/62481/item/4",
       "itemName": "2009 Toyota Highlander 4X4",
@@ -29,37 +9,7 @@
       "lotFees": 391.7288,
       "buyersPremium": 105.15,
       "closingTime": null,
-      "timestamp": "2025-12-21T16:55:58.414Z"
-    },
-    {
-      "url": "https://www.k-bid.com/auction/62603/item/14",
-      "itemName": "2014 Volkswagen Passat Treadline",
-      "currentPrice": "$1,076.99",
-      "nextRequiredBid": "$1,151.99",
-      "lotFees": 439.596912,
-      "buyersPremium": 161.5485,
-      "closingTime": "2025-12-28T23:59:59.999Z",
-      "timestamp": "2025-12-21T16:56:00.542Z"
-    },
-    {
-      "url": "https://www.k-bid.com/auction/62483/item/3",
-      "itemName": "2009 Toyota Camry",
-      "currentPrice": "$1,500.00",
-      "nextRequiredBid": "$1,575.00",
-      "lotFees": 446.7,
-      "buyersPremium": 225,
-      "closingTime": null,
-      "timestamp": "2025-12-21T16:56:02.871Z"
-    },
-    {
-      "url": "https://www.k-bid.com/auction/62482/item/4",
-      "itemName": "2011 Cadillac SRX AWD",
-      "currentPrice": "$1,350.00",
-      "nextRequiredBid": "$1,425.00",
-      "lotFees": 436.38,
-      "buyersPremium": 202.5,
-      "closingTime": null,
-      "timestamp": "2025-12-21T16:56:05.023Z"
+      "timestamp": "2025-12-21T17:15:49.536Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62482/item/3",
@@ -69,7 +19,37 @@
       "lotFees": 426.06,
       "buyersPremium": 180,
       "closingTime": null,
-      "timestamp": "2025-12-21T16:56:07.206Z"
+      "timestamp": "2025-12-21T17:15:51.710Z"
+    },
+    {
+      "url": "https://www.k-bid.com/auction/62482/item/4",
+      "itemName": "2011 Cadillac SRX AWD",
+      "currentPrice": "$1,350.00",
+      "nextRequiredBid": "$1,425.00",
+      "lotFees": 436.38,
+      "buyersPremium": 202.5,
+      "closingTime": null,
+      "timestamp": "2025-12-21T17:15:53.866Z"
+    },
+    {
+      "url": "https://www.k-bid.com/auction/62483/item/3",
+      "itemName": "2009 Toyota Camry",
+      "currentPrice": "$1,500.00",
+      "nextRequiredBid": "$1,575.00",
+      "lotFees": 446.7,
+      "buyersPremium": 225,
+      "closingTime": null,
+      "timestamp": "2025-12-21T17:15:55.998Z"
+    },
+    {
+      "url": "https://www.k-bid.com/auction/62483/item/4",
+      "itemName": "2008 Volkswagen Passat Komfort 2.0 TSI",
+      "currentPrice": "$525.00",
+      "nextRequiredBid": "$575.00",
+      "lotFees": 334.12,
+      "buyersPremium": 78.75,
+      "closingTime": null,
+      "timestamp": "2025-12-21T17:15:58.137Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62600/item/3",
@@ -78,8 +58,8 @@
       "nextRequiredBid": "$470.00",
       "lotFees": 436.116,
       "buyersPremium": 66.75,
-      "closingTime": "2025-12-27T02:31:09.353Z",
-      "timestamp": "2025-12-21T16:56:09.353Z"
+      "closingTime": null,
+      "timestamp": "2025-12-21T17:16:00.282Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62600/item/4",
@@ -88,8 +68,28 @@
       "nextRequiredBid": "$630.00",
       "lotFees": 445.404,
       "buyersPremium": 87,
-      "closingTime": "2025-12-27T02:32:11.518Z",
-      "timestamp": "2025-12-21T16:56:11.518Z"
+      "closingTime": null,
+      "timestamp": "2025-12-21T17:16:02.804Z"
+    },
+    {
+      "url": "https://www.k-bid.com/auction/62603/item/14",
+      "itemName": "2014 Volkswagen Passat Treadline",
+      "currentPrice": "$1,076.99",
+      "nextRequiredBid": "$1,151.99",
+      "lotFees": 439.596912,
+      "buyersPremium": 161.5485,
+      "closingTime": "2025-12-28T23:59:59.999Z",
+      "timestamp": "2025-12-21T17:16:04.970Z"
+    },
+    {
+      "url": "https://www.k-bid.com/auction/62603/item/18",
+      "itemName": "2011 Chevrolet Malibu LS",
+      "currentPrice": "$750.00",
+      "nextRequiredBid": "$800.00",
+      "lotFees": 417.1,
+      "buyersPremium": 112.5,
+      "closingTime": "2025-12-28T23:59:59.999Z",
+      "timestamp": "2025-12-21T17:16:07.101Z"
     }
   ]
 }
