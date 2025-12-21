@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-21T09:40:20.136Z",
+  "lastUpdated": "2025-12-21T10:03:00.878Z",
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
@@ -8,18 +8,18 @@
       "nextRequiredBid": "$575.00",
       "lotFees": 334.12,
       "buyersPremium": 78.75,
-      "closingTime": "2025-12-22T02:18:00.667Z",
-      "timestamp": "2025-12-21T09:40:20.667Z"
+      "closingTime": "2025-12-22T02:18:00.759Z",
+      "timestamp": "2025-12-21T10:03:01.759Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/8",
       "itemName": "2011 Jeep Grand Cherokee Laredo 4x4",
-      "currentPrice": "$1,000.00",
-      "nextRequiredBid": "$1,050.00",
-      "lotFees": 434.3,
-      "buyersPremium": 150,
-      "closingTime": "2025-12-22T01:47:00.592Z",
-      "timestamp": "2025-12-21T09:40:20.592Z"
+      "currentPrice": "$2,000.00",
+      "nextRequiredBid": "$2,075.00",
+      "lotFees": 503.1,
+      "buyersPremium": 300,
+      "closingTime": "2025-12-22T01:47:00.929Z",
+      "timestamp": "2025-12-21T10:03:03.929Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/18",
@@ -28,8 +28,8 @@
       "nextRequiredBid": "$800.00",
       "lotFees": 417.1,
       "buyersPremium": 112.5,
-      "closingTime": "2025-12-22T01:57:00.636Z",
-      "timestamp": "2025-12-21T09:40:20.636Z"
+      "closingTime": "2025-12-22T01:57:01.073Z",
+      "timestamp": "2025-12-21T10:03:06.073Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62481/item/4",
@@ -38,8 +38,8 @@
       "nextRequiredBid": "$751.00",
       "lotFees": 391.7288,
       "buyersPremium": 105.15,
-      "closingTime": "2025-12-22T02:08:00.822Z",
-      "timestamp": "2025-12-21T09:40:21.822Z"
+      "closingTime": "2025-12-22T02:08:00.221Z",
+      "timestamp": "2025-12-21T10:03:08.221Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/14",
@@ -48,8 +48,8 @@
       "nextRequiredBid": "$1,076.99",
       "lotFees": 434.436912,
       "buyersPremium": 150.2985,
-      "closingTime": "2025-12-22T01:53:00.845Z",
-      "timestamp": "2025-12-21T09:40:21.845Z"
+      "closingTime": "2025-12-22T01:53:00.368Z",
+      "timestamp": "2025-12-21T10:03:10.368Z"
     }
   ]
 }
