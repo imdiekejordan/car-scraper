@@ -1,5 +1,7 @@
 [build]
   publish = "."
+  # Note: Builds are skipped when commit message contains [skip netlify]
+  # This is configured in GitHub Actions workflow to save build minutes
 
 [[redirects]]
   from = "/.netlify/functions/*"

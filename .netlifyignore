@@ -1,0 +1,8 @@
+# Ignore these files from triggering builds
+# But note: we still need data.json to be served, so we can't ignore it completely
+# Instead, we use an empty build command to minimize build time
+
+# The real solution is to configure Netlify dashboard:
+# Site Settings > Build & Deploy > Build Settings
+# Set "Skip builds" or use commit message "[skip netlify]"
+
