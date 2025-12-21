@@ -1332,11 +1332,16 @@
                     // Poll for updates every 5 seconds, up to 2 minutes
                     let attempts = 0;
                     const maxAttempts = 24; // 2 minutes / 5 seconds
+                    let lastKnownUpdate = null;
+                    
                     const pollInterval = setInterval(async () => {
                         attempts++;
                         showStatus(`Waiting for scrape to complete... (${attempts * 5} seconds)`, 'info');
                         
                         try {
+                            // Refresh data on each poll
+                            await loadData();
+                            
                             const dataResponse = await fetch('data.json?t=' + Date.now());
                             if (dataResponse.ok) {
                                 const data = await dataResponse.json();
@@ -1344,15 +1349,31 @@
                                 const now = new Date();
                                 const diff = now - lastUpdated;
                                 
-                                // If data was updated in the last 2 minutes, it's fresh
-                                if (diff < 120000) {
+                                // Check if data was updated (compare to last known update time)
+                                if (lastKnownUpdate && lastUpdated.getTime() > lastKnownUpdate.getTime()) {
+                                    // Data was updated!
                                     clearInterval(pollInterval);
                                     btn.textContent = originalText;
                                     btn.disabled = false;
                                     btn.classList.remove('loading');
                                     showStatus('Update complete! Data refreshed.', 'success', true);
-                                    loadData();
+                                    await loadData(); // Final refresh
+                                    return;
                                 }
+                                
+                                // If data was updated in the last 2 minutes and we don't have a previous check, it's fresh
+                                if (!lastKnownUpdate && diff < 120000) {
+                                    clearInterval(pollInterval);
+                                    btn.textContent = originalText;
+                                    btn.disabled = false;
+                                    btn.classList.remove('loading');
+                                    showStatus('Update complete! Data refreshed.', 'success', true);
+                                    await loadData(); // Final refresh
+                                    return;
+                                }
+                                
+                                // Store this as the last known update time
+                                lastKnownUpdate = lastUpdated.getTime();
                             }
                         } catch (error) {
                             console.error('Error polling for updates:', error);
@@ -1364,7 +1385,7 @@
                             btn.disabled = false;
                             btn.classList.remove('loading');
                             showStatus('Update timed out. Data may still be processing.', 'warning', true);
-                            loadData();
+                            await loadData(); // Final refresh
                         }
                     }, 5000);
                 } else {

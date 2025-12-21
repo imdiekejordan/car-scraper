@@ -343,12 +343,51 @@ async function scrapeItem(url, retries = 3) {
       }
     }
     
-    if (countdownText) {
+    // Try to find actual date/time first (more reliable than countdown)
+    // Look for common date/time patterns on auction pages
+    const dateTimePatterns = [
+      // ISO format: "2025-12-22T23:59:59"
+      /(\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2})/,
+      // "Ends: Dec 22, 2025 11:59 PM" or "Closes: Dec 22, 2025 11:59 PM"
+      /(?:ends?|closes?|ending|closing)[:\s]+(Dec|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov)\s+(\d{1,2}),?\s+(\d{4})\s+(\d{1,2}):(\d{2})\s*(am|pm)/i,
+      // "December 22, 2025 11:59 PM"
+      /(December|January|February|March|April|May|June|July|August|September|October|November)\s+(\d{1,2}),?\s+(\d{4})\s+(\d{1,2}):(\d{2})\s*(am|pm)/i,
+      // "12/22/2025 11:59 PM"
+      /(\d{1,2}\/\d{1,2}\/\d{4}\s+\d{1,2}:\d{2}\s*(?:AM|PM)?)/i,
+      // "Dec 22, 2025 11:59 PM" (without "Ends" prefix)
+      /(Dec|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov)\s+(\d{1,2}),?\s+(\d{4})\s+(\d{1,2}):(\d{2})\s*(am|pm)/i,
+      // Date only: "Dec 22, 2025" - assume end of day
+      /(?:ends?|closes?|ending|closing)[:\s]+(Dec|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov)\s+(\d{1,2}),?\s+(\d{4})/i
+    ];
+    
+    for (const pattern of dateTimePatterns) {
+      const match = bodyText.match(pattern);
+      if (match) {
+        try {
+          let dateStr = match[0];
+          // If it's a date-only match (last pattern), add time
+          if (match.length === 4 && !match[0].match(/\d{1,2}:\d{2}/)) {
+            dateStr = match[0] + ' 11:59 PM';
+          }
+          const date = new Date(dateStr);
+          if (!isNaN(date.getTime()) && date > new Date()) {
+            closingTime = date.toISOString();
+            break;
+          }
+        } catch (e) {
+          continue;
+        }
+      }
+    }
+    
+    // If no date/time found, try countdown timer
+    if (!closingTime && countdownText) {
       const [hours, minutes, seconds] = countdownText.split(':').map(Number);
       const now = new Date();
       const closing = new Date(now.getTime() + (days * 24 * 3600 + hours * 3600 + minutes * 60 + seconds) * 1000);
       closingTime = closing.toISOString();
-    } else {
+    } else if (!closingTime) {
+      // Fallback: try page title patterns
       const endingMatch = pageTitle.match(/ENDING\s+(SUNDAY|MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY)\s+(NIGHT|EVENING|MORNING|AFTERNOON)/i);
       if (endingMatch) {
         const dayName = endingMatch[1];
@@ -376,27 +415,6 @@ async function scrapeItem(url, retries = 3) {
         }
         
         closingTime = closing.toISOString();
-      } else {
-        const datePatterns = [
-          /(\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2})/,
-          /(Dec|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov)\s+(\d{1,2})\s+(\d{1,2}):(\d{2})\s*(am|pm)/i,
-          /(\d{1,2}\/\d{1,2}\/\d{4}\s+\d{1,2}:\d{2}\s*(?:AM|PM)?)/i
-        ];
-        
-        for (const pattern of datePatterns) {
-          const match = bodyText.match(pattern);
-          if (match) {
-            try {
-              const date = new Date(match[0]);
-              if (!isNaN(date.getTime())) {
-                closingTime = date.toISOString();
-                break;
-              }
-            } catch (e) {
-              continue;
-            }
-          }
-        }
       }
     }
 
