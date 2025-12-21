@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-21T10:18:46.044Z",
+  "lastUpdated": "2025-12-21T10:20:55.715Z",
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
@@ -8,8 +8,8 @@
       "nextRequiredBid": "$575.00",
       "lotFees": 334.12,
       "buyersPremium": 78.75,
-      "closingTime": "2025-12-22T02:18:00.685Z",
-      "timestamp": "2025-12-21T10:18:46.686Z"
+      "closingTime": "2025-12-22T02:18:01.404Z",
+      "timestamp": "2025-12-21T10:20:56.404Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/8",
@@ -18,8 +18,8 @@
       "nextRequiredBid": "$2,075.00",
       "lotFees": 503.1,
       "buyersPremium": 300,
-      "closingTime": "2025-12-22T01:47:00.839Z",
-      "timestamp": "2025-12-21T10:18:48.839Z"
+      "closingTime": "2025-12-22T01:47:00.560Z",
+      "timestamp": "2025-12-21T10:20:58.560Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/18",
@@ -28,8 +28,8 @@
       "nextRequiredBid": "$800.00",
       "lotFees": 417.1,
       "buyersPremium": 112.5,
-      "closingTime": "2025-12-22T01:57:01.012Z",
-      "timestamp": "2025-12-21T10:18:51.012Z"
+      "closingTime": "2025-12-22T01:57:00.712Z",
+      "timestamp": "2025-12-21T10:21:00.712Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62481/item/4",
@@ -38,8 +38,8 @@
       "nextRequiredBid": "$751.00",
       "lotFees": 391.7288,
       "buyersPremium": 105.15,
-      "closingTime": "2025-12-22T02:08:00.188Z",
-      "timestamp": "2025-12-21T10:18:53.188Z"
+      "closingTime": "2025-12-22T02:08:00.901Z",
+      "timestamp": "2025-12-21T10:21:02.901Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/14",
@@ -48,8 +48,8 @@
       "nextRequiredBid": "$1,076.99",
       "lotFees": 434.436912,
       "buyersPremium": 150.2985,
-      "closingTime": "2025-12-22T01:53:00.335Z",
-      "timestamp": "2025-12-21T10:18:55.335Z"
+      "closingTime": "2025-12-22T01:53:01.047Z",
+      "timestamp": "2025-12-21T10:21:05.047Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/3",
@@ -58,8 +58,18 @@
       "nextRequiredBid": "$1,575.00",
       "lotFees": 446.7,
       "buyersPremium": 225,
-      "closingTime": "2025-12-22T02:17:00.480Z",
-      "timestamp": "2025-12-21T10:18:57.480Z"
+      "closingTime": "2025-12-22T02:17:00.178Z",
+      "timestamp": "2025-12-21T10:21:07.178Z"
+    },
+    {
+      "url": "https://www.k-bid.com/auction/62482/item/4",
+      "itemName": "2011 Cadillac SRX AWD",
+      "currentPrice": "$1,350.00",
+      "nextRequiredBid": "$1,425.00",
+      "lotFees": 436.38,
+      "buyersPremium": 202.5,
+      "closingTime": "2025-12-22T02:13:00.323Z",
+      "timestamp": "2025-12-21T10:21:09.323Z"
     }
   ]
 }
