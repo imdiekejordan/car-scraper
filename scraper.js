@@ -100,10 +100,83 @@ async function scrapeItem(url) {
       currentPrice = 'N/A';
     }
 
+    let closingTime = '';
+    
+    const pageTitle = $('title').text();
+    const bodyText = $('body').text();
+    
+    const timeElements = $('[class*="time"]');
+    let countdownText = '';
+    timeElements.each((i, el) => {
+      const text = $(el).text().trim();
+      if (text.match(/^\d{2}:\d{2}:\d{2}$/)) {
+        countdownText = text;
+        return false;
+      }
+    });
+    
+    if (countdownText) {
+      const [hours, minutes, seconds] = countdownText.split(':').map(Number);
+      const now = new Date();
+      const closing = new Date(now.getTime() + (hours * 3600 + minutes * 60 + seconds) * 1000);
+      closingTime = closing.toISOString();
+    } else {
+      const endingMatch = pageTitle.match(/ENDING\s+(SUNDAY|MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY)\s+(NIGHT|EVENING|MORNING|AFTERNOON)/i);
+      if (endingMatch) {
+        const dayName = endingMatch[1];
+        const timeOfDay = endingMatch[2].toLowerCase();
+        
+        const now = new Date();
+        const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        const targetDay = daysOfWeek.indexOf(dayName.toLowerCase());
+        const currentDay = now.getDay();
+        
+        let daysUntil = targetDay - currentDay;
+        if (daysUntil <= 0) {
+          daysUntil += 7;
+        }
+        
+        const closing = new Date(now);
+        closing.setDate(now.getDate() + daysUntil);
+        
+        if (timeOfDay === 'night' || timeOfDay === 'evening') {
+          closing.setHours(23, 59, 59, 999);
+        } else if (timeOfDay === 'morning') {
+          closing.setHours(12, 0, 0, 0);
+        } else {
+          closing.setHours(18, 0, 0, 0);
+        }
+        
+        closingTime = closing.toISOString();
+      } else {
+        const datePatterns = [
+          /(\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2})/,
+          /(Dec|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov)\s+(\d{1,2})\s+(\d{1,2}):(\d{2})\s*(am|pm)/i,
+          /(\d{1,2}\/\d{1,2}\/\d{4}\s+\d{1,2}:\d{2}\s*(?:AM|PM)?)/i
+        ];
+        
+        for (const pattern of datePatterns) {
+          const match = bodyText.match(pattern);
+          if (match) {
+            try {
+              const date = new Date(match[0]);
+              if (!isNaN(date.getTime())) {
+                closingTime = date.toISOString();
+                break;
+              }
+            } catch (e) {
+              continue;
+            }
+          }
+        }
+      }
+    }
+
     return {
       url: url,
       itemName: itemName || 'Unknown Item',
       currentPrice: currentPrice,
+      closingTime: closingTime || null,
       timestamp: new Date().toISOString()
     };
   } catch (error) {

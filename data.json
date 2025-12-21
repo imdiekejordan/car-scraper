@@ -1,35 +1,40 @@
 {
-  "lastUpdated": "2025-12-21T06:13:02.749Z",
+  "lastUpdated": "2025-12-21T07:13:09.859Z",
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62603/item/8",
       "itemName": "2011 Jeep Grand Cherokee Laredo 4x4",
       "currentPrice": "$1,000.00",
-      "timestamp": "2025-12-21T06:13:03.105Z"
+      "closingTime": "2025-12-22T01:47:04.312Z",
+      "timestamp": "2025-12-21T07:13:10.312Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/14",
       "itemName": "2014 Volkswagen Passat Treadline",
       "currentPrice": "$1,001.99",
-      "timestamp": "2025-12-21T06:13:04.292Z"
+      "closingTime": "2025-12-22T01:53:03.463Z",
+      "timestamp": "2025-12-21T07:13:11.463Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/18",
       "itemName": "2011 Chevrolet Malibu LS",
       "currentPrice": "$750.00",
-      "timestamp": "2025-12-21T06:13:05.524Z"
+      "closingTime": "2025-12-22T01:57:03.627Z",
+      "timestamp": "2025-12-21T07:13:12.627Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62481/item/4",
       "itemName": "2009 Toyota Highlander 4X4",
       "currentPrice": "$701.00",
-      "timestamp": "2025-12-21T06:13:06.726Z"
+      "closingTime": "2025-12-22T02:08:03.783Z",
+      "timestamp": "2025-12-21T07:13:13.783Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
       "itemName": "2008 Volkswagen Passat Komfort 2.0 TSI",
       "currentPrice": "$525.00",
-      "timestamp": "2025-12-21T06:13:07.904Z"
+      "closingTime": "2025-12-22T02:18:03.949Z",
+      "timestamp": "2025-12-21T07:13:14.949Z"
     }
   ]
 }

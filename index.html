@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auction Monitor</title>
+    <meta name="robots" content="noindex, nofollow">
+    <title>K-BID Auction Monitor</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🚗%3C/text%3E%3C/svg%3E">
     <style>
         * {
             margin: 0;
@@ -61,12 +63,15 @@
             background: white;
             border: 1px solid #ddd;
             border-radius: 4px;
-            overflow: hidden;
+            overflow-x: auto;
+            overflow-y: visible;
+            -webkit-overflow-scrolling: touch;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 600px;
         }
         
         thead {
@@ -140,10 +145,21 @@
             background-color: #2980b9;
         }
         
-        .timestamp {
-            color: #7f8c8d;
-            font-size: 0.875rem;
+        .closing-time {
+            color: #2c3e50;
+            font-size: 0.9rem;
             font-family: 'Courier New', monospace;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .closing-time.urgent {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .closing-time.expired {
+            color: #95a5a6;
         }
         
         .loading {
@@ -173,6 +189,7 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             padding: 1.5rem;
+            margin-top: 2rem;
             margin-bottom: 1.5rem;
         }
         
@@ -295,34 +312,29 @@
                 margin: 1rem auto;
             }
             
+            .table-wrapper {
+                margin: 0;
+                border-radius: 4px;
+            }
+            
             th, td {
-                padding: 0.75rem;
-                font-size: 0.875rem;
+                padding: 0.75rem 0.5rem;
+                font-size: 0.8rem;
             }
             
             .stats {
                 flex-direction: column;
                 align-items: flex-start;
             }
+            
+            .url-manager {
+                margin-top: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="main">
-        <div class="url-manager">
-            <div class="url-manager-header" onclick="toggleUrlManager()">
-                <h2>Manage URLs</h2>
-                <span class="toggle-icon" id="toggleIcon">▼</span>
-            </div>
-            <div class="url-manager-content" id="urlManagerContent">
-                <div class="url-form">
-                    <input type="text" class="url-input" id="newUrlInput" placeholder="Enter auction URL (e.g., https://www.k-bid.com/auction/62603/item/8)">
-                    <button class="btn btn-primary" onclick="addUrl()">Add URL</button>
-                </div>
-                <ul class="url-list" id="urlList"></ul>
-            </div>
-        </div>
-        
         <div id="error" class="error-message" style="display: none;"></div>
         
         <div id="loading" class="loading">Loading auction data...</div>
@@ -345,13 +357,27 @@
                         <tr>
                             <th>Item Name</th>
                             <th>Current Price</th>
-                            <th>Last Updated</th>
+                            <th>Closing Time</th>
                             <th>Link</th>
                         </tr>
                     </thead>
                     <tbody id="resultsBody">
                     </tbody>
                 </table>
+            </div>
+        </div>
+        
+        <div class="url-manager">
+            <div class="url-manager-header" onclick="toggleUrlManager()">
+                <h2>Manage URLs</h2>
+                <span class="toggle-icon" id="toggleIcon">▼</span>
+            </div>
+            <div class="url-manager-content" id="urlManagerContent">
+                <div class="url-form">
+                    <input type="text" class="url-input" id="newUrlInput" placeholder="Enter auction URL (e.g., https://www.k-bid.com/auction/62603/item/8)">
+                    <button class="btn btn-primary" onclick="addUrl()">Add URL</button>
+                </div>
+                <ul class="url-list" id="urlList"></ul>
             </div>
         </div>
     </div>
@@ -571,12 +597,13 @@
                             priceCell.textContent = item.currentPrice;
                         }
                         
-                        const timestampCell = document.createElement('td');
-                        timestampCell.className = 'timestamp';
-                        if (item.timestamp) {
-                            timestampCell.textContent = formatDate(item.timestamp);
+                        const closingTimeCell = document.createElement('td');
+                        closingTimeCell.className = 'closing-time';
+                        closingTimeCell.setAttribute('data-closing-time', item.closingTime || '');
+                        if (item.closingTime) {
+                            updateCountdown(closingTimeCell, item.closingTime);
                         } else {
-                            timestampCell.textContent = 'N/A';
+                            closingTimeCell.textContent = 'N/A';
                         }
                         
                         const linkCell = document.createElement('td');
@@ -590,7 +617,7 @@
                         
                         row.appendChild(nameCell);
                         row.appendChild(priceCell);
-                        row.appendChild(timestampCell);
+                        row.appendChild(closingTimeCell);
                         row.appendChild(linkCell);
                         
                         tbody.appendChild(row);
@@ -611,8 +638,59 @@
             }
         }
         
+        function updateCountdown(element, closingTime) {
+            if (!closingTime) {
+                element.textContent = 'N/A';
+                return;
+            }
+            
+            try {
+                const closing = new Date(closingTime);
+                const now = new Date();
+                const diff = closing - now;
+                
+                if (diff <= 0) {
+                    element.textContent = 'Closed';
+                    element.classList.add('expired');
+                    element.classList.remove('urgent');
+                    return;
+                }
+                
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                if (days > 0) {
+                    element.textContent = `${days}d ${hours}h ${minutes}m`;
+                } else if (hours > 0) {
+                    element.textContent = `${hours}h ${minutes}m ${seconds}s`;
+                    if (hours < 2) {
+                        element.classList.add('urgent');
+                    }
+                } else {
+                    element.textContent = `${minutes}m ${seconds}s`;
+                    element.classList.add('urgent');
+                }
+                
+                element.classList.remove('expired');
+            } catch (e) {
+                element.textContent = 'Invalid date';
+            }
+        }
+        
+        function updateAllCountdowns() {
+            document.querySelectorAll('.closing-time[data-closing-time]').forEach(cell => {
+                const closingTime = cell.getAttribute('data-closing-time');
+                if (closingTime) {
+                    updateCountdown(cell, closingTime);
+                }
+            });
+        }
+        
         loadData();
         setInterval(loadData, 5 * 60 * 1000);
+        setInterval(updateAllCountdowns, 1000);
     </script>
 </body>
 </html>
