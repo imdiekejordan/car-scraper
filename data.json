@@ -1,40 +1,40 @@
 {
-  "lastUpdated": "2025-12-21T07:22:58.403Z",
+  "lastUpdated": "2025-12-21T07:23:27.636Z",
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
       "itemName": "2008 Volkswagen Passat Komfort 2.0 TSI",
       "currentPrice": "$525.00",
-      "closingTime": "2025-12-22T02:18:01.032Z",
-      "timestamp": "2025-12-21T07:22:59.032Z"
+      "closingTime": "2025-12-22T02:18:00.996Z",
+      "timestamp": "2025-12-21T07:23:27.996Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/8",
       "itemName": "2011 Jeep Grand Cherokee Laredo 4x4",
       "currentPrice": "$1,000.00",
-      "closingTime": "2025-12-22T01:47:00.295Z",
-      "timestamp": "2025-12-21T07:23:00.295Z"
-    },
-    {
-      "url": "https://www.k-bid.com/auction/62603/item/14",
-      "itemName": "2014 Volkswagen Passat Treadline",
-      "currentPrice": "$1,001.99",
-      "closingTime": "2025-12-22T01:53:00.541Z",
-      "timestamp": "2025-12-21T07:23:01.541Z"
+      "closingTime": "2025-12-22T01:47:00.146Z",
+      "timestamp": "2025-12-21T07:23:29.146Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/18",
       "itemName": "2011 Chevrolet Malibu LS",
       "currentPrice": "$750.00",
-      "closingTime": "2025-12-22T01:57:00.751Z",
-      "timestamp": "2025-12-21T07:23:02.751Z"
+      "closingTime": "2025-12-22T01:57:00.286Z",
+      "timestamp": "2025-12-21T07:23:30.286Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62481/item/4",
       "itemName": "2009 Toyota Highlander 4X4",
       "currentPrice": "$701.00",
-      "closingTime": "2025-12-22T02:08:00.909Z",
-      "timestamp": "2025-12-21T07:23:03.909Z"
+      "closingTime": "2025-12-22T02:08:00.430Z",
+      "timestamp": "2025-12-21T07:23:31.430Z"
+    },
+    {
+      "url": "https://www.k-bid.com/auction/62603/item/14",
+      "itemName": "2014 Volkswagen Passat Treadline",
+      "currentPrice": "$1,001.99",
+      "closingTime": "2025-12-22T01:53:00.578Z",
+      "timestamp": "2025-12-21T07:23:32.578Z"
     }
   ]
 }
