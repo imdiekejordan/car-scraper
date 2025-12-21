@@ -34,11 +34,30 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          
+          # Stash any unstaged changes first
+          git stash || true
+          
+          # Pull latest changes
+          git pull --rebase origin main || git pull origin main || true
+          
+          # Add only data.json
           git add data.json
+          
           if ! git diff --staged --quiet; then
             git commit -m "Update scraped data - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
-            git pull --rebase || true
-            git push || (git pull --rebase && git push)
+            
+            # Push with retry logic
+            for i in 1 2 3; do
+              if git push origin main; then
+                echo "Push successful"
+                break
+              else
+                echo "Push failed, attempt $i, pulling and retrying..."
+                git pull --rebase origin main || git pull origin main || true
+                sleep 2
+              fi
+            done
           else
             echo "No changes to commit"
           fi
