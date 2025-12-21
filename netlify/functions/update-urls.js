@@ -46,13 +46,65 @@ exports.handler = async (event) => {
       throw new Error('Failed to commit to GitHub');
     }
 
-    // Don't trigger workflow automatically - let the scheduled run pick up the new URLs
-    // User can manually trigger via "Update Data" button if they want immediate results
+    // Check if a workflow is already running or queued before triggering
+    const runsResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/scrape.yml/runs?status=in_progress&status=queued&per_page=5`, {
+      headers: {
+        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true, message: 'URLs updated. The scraper will run on the next scheduled run (every 15 minutes) or you can click "Update Data" to trigger it now.' })
-    };
+    let shouldTrigger = true;
+    if (runsResponse.ok) {
+      const runsData = await runsResponse.json();
+      if (runsData.workflow_runs && runsData.workflow_runs.length > 0) {
+        // Check if any run was triggered in the last 2 minutes (to prevent rapid re-triggering)
+        const recentRuns = runsData.workflow_runs.filter(run => {
+          const runTime = new Date(run.created_at);
+          const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
+          return runTime > twoMinutesAgo;
+        });
+        
+        if (recentRuns.length > 0) {
+          console.log('Workflow already running or recently triggered, skipping');
+          shouldTrigger = false;
+        }
+      }
+    }
+
+    // Trigger the workflow to scrape immediately (only if not already running)
+    if (shouldTrigger) {
+      // Add a small delay to ensure the commit is processed first
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const workflowResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/scrape.yml/dispatches`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${GITHUB_TOKEN}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ref: 'main'
+        })
+      });
+
+      if (!workflowResponse.ok) {
+        const errorText = await workflowResponse.text();
+        console.error('Failed to trigger workflow:', errorText);
+        // Don't fail the whole request if workflow trigger fails
+      }
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ success: true, message: 'URLs updated and scraper triggered. Data will be available shortly.' })
+      };
+    } else {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ success: true, message: 'URLs updated. A scrape is already running or was recently triggered.' })
+      };
+    }
   } catch (error) {
     return {
       statusCode: 500,
