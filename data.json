@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-21T13:54:03.910Z",
+  "lastUpdated": "2025-12-21T14:17:05.804Z",
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
@@ -8,18 +8,18 @@
       "nextRequiredBid": "$575.00",
       "lotFees": 334.12,
       "buyersPremium": 78.75,
-      "closingTime": "2025-12-22T02:18:00.599Z",
-      "timestamp": "2025-12-21T13:54:04.599Z"
+      "closingTime": "2025-12-22T02:18:01.684Z",
+      "timestamp": "2025-12-21T14:17:06.684Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/8",
       "itemName": "2011 Jeep Grand Cherokee Laredo 4x4",
-      "currentPrice": "$2,000.00",
-      "nextRequiredBid": "$2,075.00",
-      "lotFees": 503.1,
-      "buyersPremium": 300,
-      "closingTime": "2025-12-22T01:47:00.765Z",
-      "timestamp": "2025-12-21T13:54:06.765Z"
+      "currentPrice": "$2,075.00",
+      "nextRequiredBid": "$2,150.00",
+      "lotFees": 508.26,
+      "buyersPremium": 311.25,
+      "closingTime": "2025-12-22T01:47:00.849Z",
+      "timestamp": "2025-12-21T14:17:08.849Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/18",
@@ -28,8 +28,8 @@
       "nextRequiredBid": "$800.00",
       "lotFees": 417.1,
       "buyersPremium": 112.5,
-      "closingTime": "2025-12-22T01:57:00.921Z",
-      "timestamp": "2025-12-21T13:54:08.921Z"
+      "closingTime": "2025-12-22T01:57:00.987Z",
+      "timestamp": "2025-12-21T14:17:10.987Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62481/item/4",
@@ -38,18 +38,18 @@
       "nextRequiredBid": "$751.00",
       "lotFees": 391.7288,
       "buyersPremium": 105.15,
-      "closingTime": "2025-12-22T02:08:01.076Z",
-      "timestamp": "2025-12-21T13:54:11.077Z"
+      "closingTime": "2025-12-22T02:08:00.127Z",
+      "timestamp": "2025-12-21T14:17:13.127Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/14",
       "itemName": "2014 Volkswagen Passat Treadline",
-      "currentPrice": "$1,001.99",
-      "nextRequiredBid": "$1,076.99",
-      "lotFees": 434.436912,
-      "buyersPremium": 150.2985,
-      "closingTime": "2025-12-22T01:53:00.227Z",
-      "timestamp": "2025-12-21T13:54:13.227Z"
+      "currentPrice": "$1,076.99",
+      "nextRequiredBid": "$1,151.99",
+      "lotFees": 439.596912,
+      "buyersPremium": 161.5485,
+      "closingTime": "2025-12-22T01:53:00.269Z",
+      "timestamp": "2025-12-21T14:17:15.269Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/3",
@@ -58,8 +58,8 @@
       "nextRequiredBid": "$1,575.00",
       "lotFees": 446.7,
       "buyersPremium": 225,
-      "closingTime": "2025-12-22T02:17:00.361Z",
-      "timestamp": "2025-12-21T13:54:15.361Z"
+      "closingTime": "2025-12-22T02:17:00.393Z",
+      "timestamp": "2025-12-21T14:17:17.393Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62482/item/4",
@@ -68,8 +68,8 @@
       "nextRequiredBid": "$1,425.00",
       "lotFees": 436.38,
       "buyersPremium": 202.5,
-      "closingTime": "2025-12-22T02:13:00.508Z",
-      "timestamp": "2025-12-21T13:54:17.508Z"
+      "closingTime": "2025-12-22T02:13:00.535Z",
+      "timestamp": "2025-12-21T14:17:19.535Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62482/item/3",
@@ -78,8 +78,8 @@
       "nextRequiredBid": "$1,275.00",
       "lotFees": 426.06,
       "buyersPremium": 180,
-      "closingTime": "2025-12-22T02:12:00.689Z",
-      "timestamp": "2025-12-21T13:54:19.689Z"
+      "closingTime": "2025-12-22T02:12:00.721Z",
+      "timestamp": "2025-12-21T14:17:21.721Z"
     }
   ]
 }
