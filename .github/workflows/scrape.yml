@@ -25,6 +25,12 @@ jobs:
       - name: Install dependencies
         run: npm install
       
+      - name: Pull latest changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git pull --rebase origin main || git pull origin main || true
+      
       - name: Run scraper
         run: npm run scrape
         continue-on-error: false
@@ -34,12 +40,6 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          
-          # Stash any unstaged changes first
-          git stash || true
-          
-          # Pull latest changes
-          git pull --rebase origin main || git pull origin main || true
           
           # Add only data.json
           git add data.json
@@ -55,6 +55,9 @@ jobs:
               else
                 echo "Push failed, attempt $i, pulling and retrying..."
                 git pull --rebase origin main || git pull origin main || true
+                # Re-add data.json after pull in case of conflicts
+                git add data.json
+                git commit -m "Update scraped data - $(date -u +'%Y-%m-%d %H:%M:%S UTC')" || true
                 sleep 2
               fi
             done
