@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-21T16:36:59.532Z",
+  "lastUpdated": "2025-12-21T16:44:18.822Z",
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
@@ -90,6 +90,16 @@
       "buyersPremium": 66.75,
       "closingTime": null,
       "timestamp": "2025-12-21T16:36:58.250Z"
+    },
+    {
+      "url": "https://www.k-bid.com/auction/62600/item/4",
+      "itemName": "2013 FORD ESCAPE SE *2 Owners | No Accidents* (NO RESERVE)",
+      "currentPrice": "$580.00",
+      "nextRequiredBid": "$630.00",
+      "lotFees": 445.404,
+      "buyersPremium": 87,
+      "closingTime": null,
+      "timestamp": "2025-12-21T16:44:17.011Z"
     }
   ]
 }
