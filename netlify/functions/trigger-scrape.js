@@ -11,6 +11,25 @@ exports.handler = async (event) => {
   }
 
   try {
+    // Check if a workflow is already running before triggering
+    const runsResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/scrape.yml/runs?status=in_progress&per_page=1`, {
+      headers: {
+        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+
+    let shouldTrigger = true;
+    if (runsResponse.ok) {
+      const runsData = await runsResponse.json();
+      if (runsData.workflow_runs && runsData.workflow_runs.length > 0) {
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ success: false, message: 'A scrape is already running. Please wait for it to complete.' })
+        };
+      }
+    }
+
     const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/scrape.yml/dispatches`, {
       method: 'POST',
       headers: {

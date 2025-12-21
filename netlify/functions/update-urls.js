@@ -46,50 +46,12 @@ exports.handler = async (event) => {
       throw new Error('Failed to commit to GitHub');
     }
 
-    // Check if a workflow is already running before triggering
-    const runsResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/scrape.yml/runs?status=in_progress&per_page=1`, {
-      headers: {
-        'Authorization': `Bearer ${GITHUB_TOKEN}`,
-        'Accept': 'application/vnd.github.v3+json'
-      }
-    });
-
-    let shouldTrigger = true;
-    if (runsResponse.ok) {
-      const runsData = await runsResponse.json();
-      if (runsData.workflow_runs && runsData.workflow_runs.length > 0) {
-        console.log('Workflow already running, skipping trigger');
-        shouldTrigger = false;
-      }
-    }
-
-    // Trigger the workflow to scrape immediately (only if not already running)
-    if (shouldTrigger) {
-      // Add a small delay to ensure the commit is processed first
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      const workflowResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/scrape.yml/dispatches`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${GITHUB_TOKEN}`,
-          'Accept': 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          ref: 'main'
-        })
-      });
-
-      if (!workflowResponse.ok) {
-        const errorText = await workflowResponse.text();
-        console.error('Failed to trigger workflow:', errorText);
-        // Don't fail the whole request if workflow trigger fails
-      }
-    }
+    // Don't trigger workflow automatically - let the scheduled run pick up the new URLs
+    // User can manually trigger via "Update Data" button if they want immediate results
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, message: 'URLs updated and scraper triggered. Data will be available shortly.' })
+      body: JSON.stringify({ success: true, message: 'URLs updated. The scraper will run on the next scheduled run (every 15 minutes) or you can click "Update Data" to trigger it now.' })
     };
   } catch (error) {
     return {
