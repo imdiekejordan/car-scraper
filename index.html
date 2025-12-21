@@ -896,6 +896,13 @@
                 const response = await fetch('data.json');
                 
                 if (!response.ok) {
+                    if (response.status === 404) {
+                        console.error('data.json not found. The scraper may not have run yet.');
+                        document.getElementById('statusMessage').textContent = 'No data available yet. The scraper will run every 15 minutes.';
+                        document.getElementById('statusMessage').style.display = 'block';
+                        document.getElementById('statusMessage').style.color = '#e74c3c';
+                        return;
+                    }
                     throw new Error(`Failed to load data: ${response.status} ${response.statusText}`);
                 }
                 
