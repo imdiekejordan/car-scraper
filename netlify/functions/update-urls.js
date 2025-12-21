@@ -46,26 +46,45 @@ exports.handler = async (event) => {
       throw new Error('Failed to commit to GitHub');
     }
 
-    // Trigger the workflow to scrape immediately
-    // Add a small delay to ensure the commit is processed first
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const workflowResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/scrape.yml/dispatches`, {
-      method: 'POST',
+    // Check if a workflow is already running before triggering
+    const runsResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/scrape.yml/runs?status=in_progress&per_page=1`, {
       headers: {
         'Authorization': `Bearer ${GITHUB_TOKEN}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ref: 'main'
-      })
+        'Accept': 'application/vnd.github.v3+json'
+      }
     });
 
-    if (!workflowResponse.ok) {
-      const errorText = await workflowResponse.text();
-      console.error('Failed to trigger workflow:', errorText);
-      // Don't fail the whole request if workflow trigger fails
+    let shouldTrigger = true;
+    if (runsResponse.ok) {
+      const runsData = await runsResponse.json();
+      if (runsData.workflow_runs && runsData.workflow_runs.length > 0) {
+        console.log('Workflow already running, skipping trigger');
+        shouldTrigger = false;
+      }
+    }
+
+    // Trigger the workflow to scrape immediately (only if not already running)
+    if (shouldTrigger) {
+      // Add a small delay to ensure the commit is processed first
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const workflowResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/scrape.yml/dispatches`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${GITHUB_TOKEN}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ref: 'main'
+        })
+      });
+
+      if (!workflowResponse.ok) {
+        const errorText = await workflowResponse.text();
+        console.error('Failed to trigger workflow:', errorText);
+        // Don't fail the whole request if workflow trigger fails
+      }
     }
 
     return {

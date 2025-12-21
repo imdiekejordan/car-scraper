@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: scrape-k-bid
-      cancel-in-progress: false
+      cancel-in-progress: true
     
     steps:
       - name: Checkout repository
