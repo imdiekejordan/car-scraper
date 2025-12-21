@@ -370,121 +370,43 @@ async function scrapeItem(url, retries = 3) {
 }
 
 async function scrapeAll() {
-  try {
-    const timestamp = new Date().toISOString();
-    
-    // Process URLs in parallel with concurrency limit (3 at a time to avoid rate limiting)
-    const concurrency = 3;
-    const results = [];
-    
-    if (!urls || urls.length === 0) {
-      console.warn('No URLs to scrape');
-      return {
-        lastUpdated: timestamp,
-        items: []
-      };
-    }
-    
-    for (let i = 0; i < urls.length; i += concurrency) {
-      const batch = urls.slice(i, i + concurrency);
-      console.log(`Processing batch ${Math.floor(i / concurrency) + 1} (${batch.length} URLs)`);
-      
-      try {
-        const batchResults = await Promise.allSettled(
-          batch.map(url => scrapeItem(url))
-        );
-        
-        // Process results - use fulfilled values or error objects
-        batchResults.forEach((result, index) => {
-          if (result.status === 'fulfilled') {
-            results.push(result.value);
-          } else {
-            // If a promise was rejected, create an error entry
-            console.error(`Failed to scrape ${batch[index]}:`, result.reason);
-            results.push({
-              url: batch[index],
-              itemName: 'Error: Could not fetch',
-              currentPrice: 'N/A',
-              timestamp: new Date().toISOString(),
-              error: result.reason?.message || result.reason?.toString() || 'Unknown error'
-            });
-          }
-        });
-      } catch (batchError) {
-        console.error(`Error processing batch:`, batchError);
-        // Add error entries for the entire batch
-        batch.forEach(url => {
-          results.push({
-            url: url,
-            itemName: 'Error: Could not fetch',
-            currentPrice: 'N/A',
-            timestamp: new Date().toISOString(),
-            error: batchError?.message || 'Batch processing error'
-          });
-        });
-      }
-      
-      // Small delay between batches to be respectful
-      if (i + concurrency < urls.length) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      }
-    }
-    
-    const data = {
-      lastUpdated: timestamp,
-      items: results
-    };
-    
-    const outputPath = path.join(__dirname, 'data.json');
-    fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
-    console.log(`Successfully saved ${results.length} items to data.json`);
-    
-    return data;
-  } catch (error) {
-    console.error('Error in scrapeAll:', error);
-    // Return empty data structure so workflow can continue
-    const fallbackData = {
-      lastUpdated: new Date().toISOString(),
-      items: []
-    };
+  const timestamp = new Date().toISOString();
+  const results = [];
+  
+  for (const url of urls) {
     try {
-      const outputPath = path.join(__dirname, 'data.json');
-      fs.writeFileSync(outputPath, JSON.stringify(fallbackData, null, 2));
-    } catch (writeError) {
-      console.error('Could not write fallback data:', writeError);
+      const item = await scrapeItem(url);
+      results.push(item);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    } catch (error) {
+      console.error(`Error scraping ${url}:`, error.message);
+      results.push({
+        url: url,
+        itemName: 'Error: Could not fetch',
+        currentPrice: 'N/A',
+        timestamp: new Date().toISOString(),
+        error: error.message
+      });
     }
-    throw error; // Re-throw to be caught by caller
   }
+  
+  const data = {
+    lastUpdated: timestamp,
+    items: results
+  };
+  
+  const outputPath = path.join(__dirname, 'data.json');
+  fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
+  
+  return data;
 }
 
 // Run if called directly
 if (require.main === module) {
-  scrapeAll()
-    .then(data => {
-      console.log(`Successfully scraped ${data.items.length} items`);
-      process.exit(0);
-    })
-    .catch(error => {
-      console.error('Fatal error:', error);
-      // Try to save partial results if we have any
-      try {
-        const outputPath = path.join(__dirname, 'data.json');
-        if (fs.existsSync(outputPath)) {
-          console.log('Previous data file exists, keeping it');
-        } else {
-          // Create empty data file so workflow doesn't fail completely
-          const emptyData = {
-            lastUpdated: new Date().toISOString(),
-            items: []
-          };
-          fs.writeFileSync(outputPath, JSON.stringify(emptyData, null, 2));
-          console.log('Created empty data file');
-        }
-      } catch (writeError) {
-        console.error('Could not write data file:', writeError);
-      }
-      process.exit(0); // Exit with 0 so workflow continues
-    });
+  scrapeAll().catch(error => {
+    console.error('Fatal error:', error);
+    process.exit(1);
+  });
 }
 
 module.exports = { scrapeAll };

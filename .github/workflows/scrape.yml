@@ -27,8 +27,7 @@ jobs:
       
       - name: Run scraper
         run: npm run scrape
-        continue-on-error: true
-        timeout-minutes: 10
+        continue-on-error: false
       
       - name: Commit and push changes
         if: success() || failure()  # Run even if scraper had some failures
