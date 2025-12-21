@@ -33,6 +33,10 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add data.json
-          git diff --staged --quiet || git commit -m "Update scraped data - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
-          git push
+          if ! git diff --staged --quiet; then
+            git commit -m "Update scraped data - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+            git push
+          else
+            echo "No changes to commit"
+          fi
 
