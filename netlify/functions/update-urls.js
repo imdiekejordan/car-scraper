@@ -46,9 +46,28 @@ exports.handler = async (event) => {
       throw new Error('Failed to commit to GitHub');
     }
 
+    // Trigger the workflow to scrape immediately
+    const workflowResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/scrape.yml/dispatches`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        ref: 'main'
+      })
+    });
+
+    if (!workflowResponse.ok) {
+      const errorText = await workflowResponse.text();
+      console.error('Failed to trigger workflow:', errorText);
+      // Don't fail the whole request if workflow trigger fails
+    }
+
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, message: 'URLs updated. Scraper will run on next scheduled run (every 15 minutes).' })
+      body: JSON.stringify({ success: true, message: 'URLs updated and scraper triggered. Data will be available shortly.' })
     };
   } catch (error) {
     return {
