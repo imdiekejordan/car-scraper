@@ -437,7 +437,7 @@
                             <th class="sortable" data-sort="actualNextRequiredBid">Actual Next Required Bid<span class="sort-arrow"></span></th>
                             <th class="sortable" data-sort="currentBid">Current Bid<span class="sort-arrow"></span></th>
                             <th class="sortable" data-sort="actualBid">Actual Bid<span class="sort-arrow"></span></th>
-                            <th>Closing Time</th>
+                            <th class="sortable" data-sort="closingTime">Closing Time<span class="sort-arrow"></span></th>
                             <th>Link</th>
                         </tr>
                     </thead>
@@ -734,6 +734,16 @@
                     const nextPercentageFees = nextBidAmount * (lotFeesPercent / 100);
                     const nextLotFees = estimatedFlatFees + nextPercentageFees;
                     return nextBidAmount + nextLotFees + nextBuyersPremium;
+                case 'closingTime':
+                    if (!item.closingTime) {
+                        return Infinity; // Put items without closing time at the end
+                    }
+                    try {
+                        const closingDate = new Date(item.closingTime);
+                        return closingDate.getTime();
+                    } catch (e) {
+                        return Infinity;
+                    }
                 default:
                     return -Infinity;
             }
