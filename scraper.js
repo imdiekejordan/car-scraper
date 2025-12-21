@@ -371,12 +371,38 @@ async function scrapeItem(url, retries = 3) {
 
 async function scrapeAll() {
   const timestamp = new Date().toISOString();
+  
+  // Process URLs in parallel with concurrency limit (3 at a time to avoid rate limiting)
+  const concurrency = 3;
   const results = [];
   
-  for (const url of urls) {
-    const item = await scrapeItem(url);
-    results.push(item);
-    await new Promise(resolve => setTimeout(resolve, 2000));
+  for (let i = 0; i < urls.length; i += concurrency) {
+    const batch = urls.slice(i, i + concurrency);
+    const batchResults = await Promise.allSettled(
+      batch.map(url => scrapeItem(url))
+    );
+    
+    // Process results - use fulfilled values or error objects
+    batchResults.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        results.push(result.value);
+      } else {
+        // If a promise was rejected, create an error entry
+        console.error(`Failed to scrape ${batch[index]}:`, result.reason);
+        results.push({
+          url: batch[index],
+          itemName: 'Error: Could not fetch',
+          currentPrice: 'N/A',
+          timestamp: new Date().toISOString(),
+          error: result.reason?.message || 'Unknown error'
+        });
+      }
+    });
+    
+    // Small delay between batches to be respectful
+    if (i + concurrency < urls.length) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
   }
   
   const data = {
