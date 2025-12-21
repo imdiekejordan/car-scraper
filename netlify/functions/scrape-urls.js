@@ -236,8 +236,44 @@ async function scrapeItem(url, retries = 3) {
       
       const timeElements = $('[class*="time"]');
       let countdownText = '';
+      let days = 0;
+      
       timeElements.each((i, el) => {
         const text = $(el).text().trim();
+        
+        // Try to match formats with days: "1d 12:34:56" or "1 day 12:34:56"
+        const dayMatch = text.match(/(\d+)\s*d(?:ay)?s?\s+(\d{1,2}):(\d{2}):(\d{2})/i);
+        if (dayMatch) {
+          days = parseInt(dayMatch[1], 10);
+          countdownText = `${dayMatch[2]}:${dayMatch[3]}:${dayMatch[4]}`;
+          return false;
+        }
+        
+        // Try to match hours > 24: "25:34:56" (25 hours = 1 day 1 hour)
+        // Also handles "123:45:67" format (multiple days worth of hours)
+        const longHoursMatch = text.match(/^(\d{2,}):(\d{2}):(\d{2})$/);
+        if (longHoursMatch) {
+          const totalHours = parseInt(longHoursMatch[1], 10);
+          days = Math.floor(totalHours / 24);
+          const remainingHours = totalHours % 24;
+          countdownText = `${String(remainingHours).padStart(2, '0')}:${longHoursMatch[2]}:${longHoursMatch[3]}`;
+          return false;
+        }
+        
+        // Try to match "1d 2h 3m 4s" format
+        const componentsMatch = text.match(/(?:(\d+)\s*d(?:ay)?s?\s*)?(?:(\d+)\s*h(?:our)?s?\s*)?(?:(\d+)\s*m(?:in)?s?\s*)?(?:(\d+)\s*s(?:ec)?s?)?/i);
+        if (componentsMatch && (componentsMatch[1] || componentsMatch[2] || componentsMatch[3] || componentsMatch[4])) {
+          days = parseInt(componentsMatch[1] || '0', 10);
+          const hours = parseInt(componentsMatch[2] || '0', 10);
+          const minutes = parseInt(componentsMatch[3] || '0', 10);
+          const seconds = parseInt(componentsMatch[4] || '0', 10);
+          const now = new Date();
+          const closing = new Date(now.getTime() + (days * 24 * 3600 + hours * 3600 + minutes * 60 + seconds) * 1000);
+          closingTime = closing.toISOString();
+          return false;
+        }
+        
+        // Standard format: "12:34:56"
         if (text.match(/^\d{2}:\d{2}:\d{2}$/)) {
           countdownText = text;
           return false;
@@ -247,7 +283,7 @@ async function scrapeItem(url, retries = 3) {
       if (countdownText) {
         const [hours, minutes, seconds] = countdownText.split(':').map(Number);
         const now = new Date();
-        const closing = new Date(now.getTime() + (hours * 3600 + minutes * 60 + seconds) * 1000);
+        const closing = new Date(now.getTime() + (days * 24 * 3600 + hours * 3600 + minutes * 60 + seconds) * 1000);
         closingTime = closing.toISOString();
       } else {
         const endingMatch = pageTitle.match(/ENDING\s+(SUNDAY|MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY)\s+(NIGHT|EVENING|MORNING|AFTERNOON)/i);
