@@ -234,10 +234,13 @@ async function scrapeItem(url, retries = 3) {
 
       let closingTime = '';
       
-      const timeElements = $('[class*="time"]');
+      // Search in multiple places for countdown timer
+      const bodyText = $('body').text();
       let countdownText = '';
       let days = 0;
       
+      // First, try to find in time-related elements
+      const timeElements = $('[class*="time"], [id*="time"], [class*="countdown"], [id*="countdown"], [class*="timer"], [id*="timer"]');
       timeElements.each((i, el) => {
         const text = $(el).text().trim();
         
@@ -260,25 +263,41 @@ async function scrapeItem(url, retries = 3) {
           return false;
         }
         
-        // Try to match "1d 2h 3m 4s" format
-        const componentsMatch = text.match(/(?:(\d+)\s*d(?:ay)?s?\s*)?(?:(\d+)\s*h(?:our)?s?\s*)?(?:(\d+)\s*m(?:in)?s?\s*)?(?:(\d+)\s*s(?:ec)?s?)?/i);
-        if (componentsMatch && (componentsMatch[1] || componentsMatch[2] || componentsMatch[3] || componentsMatch[4])) {
-          days = parseInt(componentsMatch[1] || '0', 10);
-          const hours = parseInt(componentsMatch[2] || '0', 10);
-          const minutes = parseInt(componentsMatch[3] || '0', 10);
-          const seconds = parseInt(componentsMatch[4] || '0', 10);
-          const now = new Date();
-          const closing = new Date(now.getTime() + (days * 24 * 3600 + hours * 3600 + minutes * 60 + seconds) * 1000);
-          closingTime = closing.toISOString();
-          return false;
-        }
-        
         // Standard format: "12:34:56"
         if (text.match(/^\d{2}:\d{2}:\d{2}$/)) {
           countdownText = text;
           return false;
         }
       });
+      
+      // If not found in elements, search in body text
+      if (!countdownText) {
+        // Try to match formats with days in body text: "1d 12:34:56"
+        const dayMatch = bodyText.match(/(\d+)\s*d(?:ay)?s?\s+(\d{1,2}):(\d{2}):(\d{2})/i);
+        if (dayMatch) {
+          days = parseInt(dayMatch[1], 10);
+          countdownText = `${dayMatch[2]}:${dayMatch[3]}:${dayMatch[4]}`;
+        } else {
+          // Try to match hours > 24 in body text: "25:34:56"
+          const longHoursMatch = bodyText.match(/(\d{2,}):(\d{2}):(\d{2})/);
+          if (longHoursMatch) {
+            const totalHours = parseInt(longHoursMatch[1], 10);
+            if (totalHours >= 24) {
+              days = Math.floor(totalHours / 24);
+              const remainingHours = totalHours % 24;
+              countdownText = `${String(remainingHours).padStart(2, '0')}:${longHoursMatch[2]}:${longHoursMatch[3]}`;
+            } else {
+              countdownText = longHoursMatch[0];
+            }
+          } else {
+            // Try standard format in body text
+            const standardMatch = bodyText.match(/\b(\d{2}):(\d{2}):(\d{2})\b/);
+            if (standardMatch) {
+              countdownText = standardMatch[0];
+            }
+          }
+        }
+      }
       
       if (countdownText) {
         const [hours, minutes, seconds] = countdownText.split(':').map(Number);
