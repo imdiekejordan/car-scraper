@@ -370,16 +370,22 @@ async function scrapeItem(url, retries = 3) {
 }
 
 async function scrapeAll() {
+  console.log(`Starting scrape for ${urls.length} URLs`);
   const timestamp = new Date().toISOString();
   const results = [];
   
-  for (const url of urls) {
+  for (let i = 0; i < urls.length; i++) {
+    const url = urls[i];
+    console.log(`[${i + 1}/${urls.length}] Scraping: ${url}`);
+    
     try {
       const item = await scrapeItem(url);
       results.push(item);
+      console.log(`✓ Successfully scraped: ${item.itemName || 'Unknown'}`);
       await new Promise(resolve => setTimeout(resolve, 2000));
     } catch (error) {
-      console.error(`Error scraping ${url}:`, error.message);
+      console.error(`✗ Error scraping ${url}:`, error.message);
+      console.error(`  Stack:`, error.stack);
       results.push({
         url: url,
         itemName: 'Error: Could not fetch',
@@ -390,23 +396,40 @@ async function scrapeAll() {
     }
   }
   
+  console.log(`\nScraping complete. ${results.length} items processed.`);
+  
   const data = {
     lastUpdated: timestamp,
     items: results
   };
   
   const outputPath = path.join(__dirname, 'data.json');
-  fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
+  try {
+    fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
+    console.log(`✓ Successfully saved data.json`);
+  } catch (writeError) {
+    console.error(`✗ Error writing data.json:`, writeError.message);
+    throw writeError;
+  }
   
   return data;
 }
 
 // Run if called directly
 if (require.main === module) {
-  scrapeAll().catch(error => {
-    console.error('Fatal error:', error);
-    process.exit(1);
-  });
+  scrapeAll()
+    .then(data => {
+      console.log(`\n✓ Scrape completed successfully`);
+      console.log(`  Total items: ${data.items.length}`);
+      console.log(`  Successful: ${data.items.filter(i => !i.error).length}`);
+      console.log(`  Failed: ${data.items.filter(i => i.error).length}`);
+      process.exit(0);
+    })
+    .catch(error => {
+      console.error('\n✗ FATAL ERROR:', error.message);
+      console.error('Stack trace:', error.stack);
+      process.exit(1);
+    });
 }
 
 module.exports = { scrapeAll };
