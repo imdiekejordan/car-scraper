@@ -89,6 +89,43 @@
             border-bottom: 2px solid #bdc3c7;
         }
         
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding-right: 2rem;
+        }
+        
+        th.sortable:hover {
+            background-color: #d5dbdb;
+        }
+        
+        th.sortable .sort-arrow {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            opacity: 0.5;
+        }
+        
+        th.sortable.sorted-asc .sort-arrow::after {
+            content: '▲';
+            opacity: 1;
+            color: #3498db;
+        }
+        
+        th.sortable.sorted-desc .sort-arrow::after {
+            content: '▼';
+            opacity: 1;
+            color: #3498db;
+        }
+        
+        th.sortable:not(.sorted-asc):not(.sorted-desc) .sort-arrow::after {
+            content: '⇅';
+        }
+        
         td {
             padding: 1rem 1.25rem;
             border-bottom: 1px solid #ecf0f1;
@@ -349,6 +386,9 @@
                     <span class="stat-label">Last Updated</span>
                     <span class="stat-value" id="lastUpdatedTime">-</span>
                 </div>
+                <div class="stat-item">
+                    <button class="btn btn-primary" onclick="triggerUpdate()" id="updateBtn">Update Now</button>
+                </div>
             </div>
             
             <div class="table-wrapper">
@@ -356,7 +396,10 @@
                     <thead>
                         <tr>
                             <th>Item Name</th>
-                            <th>Current Price</th>
+                            <th class="sortable" data-sort="nextRequiredBid">Next Required Bid<span class="sort-arrow"></span></th>
+                            <th class="sortable" data-sort="actualNextRequiredBid">Actual Next Required Bid<span class="sort-arrow"></span></th>
+                            <th class="sortable" data-sort="currentBid">Current Bid<span class="sort-arrow"></span></th>
+                            <th class="sortable" data-sort="actualBid">Actual Bid<span class="sort-arrow"></span></th>
                             <th>Closing Time</th>
                             <th>Link</th>
                         </tr>
@@ -521,6 +564,25 @@
                 });
             }
             
+            // Add sort handlers
+            document.querySelectorAll('th.sortable').forEach(th => {
+                th.addEventListener('click', () => {
+                    const column = th.getAttribute('data-sort');
+                    if (currentSortColumn === column) {
+                        // Toggle direction
+                        currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        // New column, start with ascending
+                        currentSortColumn = column;
+                        currentSortDirection = 'asc';
+                    }
+                    
+                    updateSortIndicators(currentSortColumn, currentSortDirection);
+                    const sortedItems = sortItems(currentItems, currentSortColumn, currentSortDirection);
+                    renderTable(sortedItems);
+                });
+            });
+            
             const urls = getUrls();
             if (urls.length === 0) {
                 loadUrlsFromFile();
@@ -547,6 +609,193 @@
             });
         }
         
+        let currentItems = [];
+        let currentSortColumn = null;
+        let currentSortDirection = null;
+        
+        function getSortValue(item, column) {
+            switch(column) {
+                case 'currentBid':
+                    return parseMonetaryValue(item.currentPrice);
+                case 'nextRequiredBid':
+                    return parseMonetaryValue(item.nextRequiredBid);
+                case 'actualBid':
+                    const bidAmount = parseFloat(item.currentPrice.replace(/[$,]/g, '')) || 0;
+                    const lotFees = item.lotFees || 0;
+                    const buyersPremium = item.buyersPremium || 0;
+                    return bidAmount + lotFees + buyersPremium;
+                case 'actualNextRequiredBid':
+                    if (item.nextRequiredBid === 'N/A' || !item.nextRequiredBid || item.currentPrice === 'N/A' || !item.currentPrice) {
+                        return -Infinity;
+                    }
+                    const currentBidAmount = parseFloat(item.currentPrice.replace(/[$,]/g, '')) || 0;
+                    const nextBidAmount = parseFloat(item.nextRequiredBid.replace(/[$,]/g, '')) || 0;
+                    const currentBuyersPremium = item.buyersPremium || 0;
+                    const currentLotFees = item.lotFees || 0;
+                    
+                    let buyersPremiumPercent = 0;
+                    if (currentBidAmount > 0 && currentBuyersPremium > 0) {
+                        buyersPremiumPercent = (currentBuyersPremium / currentBidAmount) * 100;
+                    }
+                    
+                    const nextBuyersPremium = nextBidAmount * (buyersPremiumPercent / 100);
+                    const estimatedFlatFees = 250 + 65 + 15.5 + 35;
+                    const percentageFeesAmount = Math.max(0, currentLotFees - estimatedFlatFees);
+                    let lotFeesPercent = 0;
+                    if (currentBidAmount > 0 && percentageFeesAmount > 0) {
+                        lotFeesPercent = (percentageFeesAmount / currentBidAmount) * 100;
+                    }
+                    
+                    const nextPercentageFees = nextBidAmount * (lotFeesPercent / 100);
+                    const nextLotFees = estimatedFlatFees + nextPercentageFees;
+                    return nextBidAmount + nextLotFees + nextBuyersPremium;
+                default:
+                    return -Infinity;
+            }
+        }
+        
+        function parseMonetaryValue(text) {
+            if (!text || text === 'N/A') return -Infinity;
+            return parseFloat(text.replace(/[$,]/g, '')) || -Infinity;
+        }
+        
+        function sortItems(items, column, direction) {
+            const sorted = [...items].sort((a, b) => {
+                const aValue = getSortValue(a, column);
+                const bValue = getSortValue(b, column);
+                
+                if (aValue === -Infinity && bValue === -Infinity) return 0;
+                if (aValue === -Infinity) return 1;
+                if (bValue === -Infinity) return -1;
+                
+                return direction === 'asc' ? aValue - bValue : bValue - aValue;
+            });
+            return sorted;
+        }
+        
+        function updateSortIndicators(column, direction) {
+            document.querySelectorAll('th.sortable').forEach(th => {
+                th.classList.remove('sorted-asc', 'sorted-desc');
+            });
+            
+            if (column) {
+                const header = document.querySelector(`th.sortable[data-sort="${column}"]`);
+                if (header) {
+                    header.classList.add(direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
+                }
+            }
+        }
+        
+        function renderTable(items) {
+            const tbody = document.getElementById('resultsBody');
+            tbody.innerHTML = '';
+            
+            if (items.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem; color: #7f8c8d;">No items to display. Add URLs in the Manage URLs section above.</td></tr>';
+                return;
+            }
+            
+            items.forEach(item => {
+                const row = document.createElement('tr');
+                
+                const nameCell = document.createElement('td');
+                nameCell.className = 'item-name';
+                nameCell.textContent = item.itemName || 'Unknown Item';
+                if (item.error) {
+                    nameCell.classList.add('error');
+                }
+                
+                const nextRequiredBidCell = document.createElement('td');
+                nextRequiredBidCell.className = 'price';
+                if (item.nextRequiredBid === 'N/A' || !item.nextRequiredBid) {
+                    nextRequiredBidCell.classList.add('na');
+                    nextRequiredBidCell.textContent = 'N/A';
+                } else {
+                    nextRequiredBidCell.textContent = item.nextRequiredBid;
+                }
+                
+                const actualNextRequiredBidCell = document.createElement('td');
+                actualNextRequiredBidCell.className = 'price';
+                if (item.nextRequiredBid === 'N/A' || !item.nextRequiredBid || item.currentPrice === 'N/A' || !item.currentPrice) {
+                    actualNextRequiredBidCell.classList.add('na');
+                    actualNextRequiredBidCell.textContent = 'N/A';
+                } else {
+                    const currentBidAmount = parseFloat(item.currentPrice.replace(/[$,]/g, '')) || 0;
+                    const nextBidAmount = parseFloat(item.nextRequiredBid.replace(/[$,]/g, '')) || 0;
+                    const currentBuyersPremium = item.buyersPremium || 0;
+                    const currentLotFees = item.lotFees || 0;
+                    
+                    let buyersPremiumPercent = 0;
+                    if (currentBidAmount > 0 && currentBuyersPremium > 0) {
+                        buyersPremiumPercent = (currentBuyersPremium / currentBidAmount) * 100;
+                    }
+                    
+                    const nextBuyersPremium = nextBidAmount * (buyersPremiumPercent / 100);
+                    const estimatedFlatFees = 250 + 65 + 15.5 + 35;
+                    const percentageFeesAmount = Math.max(0, currentLotFees - estimatedFlatFees);
+                    let lotFeesPercent = 0;
+                    if (currentBidAmount > 0 && percentageFeesAmount > 0) {
+                        lotFeesPercent = (percentageFeesAmount / currentBidAmount) * 100;
+                    }
+                    
+                    const nextPercentageFees = nextBidAmount * (lotFeesPercent / 100);
+                    const nextLotFees = estimatedFlatFees + nextPercentageFees;
+                    const actualNextRequiredBid = nextBidAmount + nextLotFees + nextBuyersPremium;
+                    actualNextRequiredBidCell.textContent = '$' + actualNextRequiredBid.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
+                
+                const priceCell = document.createElement('td');
+                priceCell.className = 'price';
+                if (item.currentPrice === 'N/A' || !item.currentPrice) {
+                    priceCell.classList.add('na');
+                    priceCell.textContent = 'N/A';
+                } else {
+                    priceCell.textContent = item.currentPrice;
+                }
+                
+                const actualBidCell = document.createElement('td');
+                actualBidCell.className = 'price';
+                if (item.currentPrice === 'N/A' || !item.currentPrice) {
+                    actualBidCell.classList.add('na');
+                    actualBidCell.textContent = 'N/A';
+                } else {
+                    const bidAmount = parseFloat(item.currentPrice.replace(/[$,]/g, '')) || 0;
+                    const lotFees = item.lotFees || 0;
+                    const buyersPremium = item.buyersPremium || 0;
+                    const actualBid = bidAmount + lotFees + buyersPremium;
+                    actualBidCell.textContent = '$' + actualBid.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
+                
+                const closingTimeCell = document.createElement('td');
+                closingTimeCell.className = 'closing-time';
+                closingTimeCell.setAttribute('data-closing-time', item.closingTime || '');
+                if (item.closingTime) {
+                    updateCountdown(closingTimeCell, item.closingTime);
+                } else {
+                    closingTimeCell.textContent = 'N/A';
+                }
+                
+                const linkCell = document.createElement('td');
+                const link = document.createElement('a');
+                link.href = item.url;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.className = 'link';
+                link.textContent = 'View';
+                linkCell.appendChild(link);
+                
+                row.appendChild(nameCell);
+                row.appendChild(nextRequiredBidCell);
+                row.appendChild(actualNextRequiredBidCell);
+                row.appendChild(priceCell);
+                row.appendChild(actualBidCell);
+                row.appendChild(closingTimeCell);
+                row.appendChild(linkCell);
+                
+                tbody.appendChild(row);
+            });
+        }
+        
         async function loadData() {
             try {
                 const response = await fetch('data.json');
@@ -561,7 +810,15 @@
                 const managedUrls = getUrls();
                 
                 // Filter items to only show those in the managed URLs list
-                const filteredItems = data.items ? data.items.filter(item => managedUrls.includes(item.url)) : [];
+                let filteredItems = data.items ? data.items.filter(item => managedUrls.includes(item.url)) : [];
+                
+                // Store items for sorting
+                currentItems = filteredItems;
+                
+                // Apply current sort if any
+                if (currentSortColumn) {
+                    filteredItems = sortItems(filteredItems, currentSortColumn, currentSortDirection);
+                }
                 
                 // Update stats
                 if (filteredItems.length > 0) {
@@ -573,63 +830,11 @@
                     document.getElementById('totalItems').textContent = '0';
                 }
                 
-                // Populate table
-                const tbody = document.getElementById('resultsBody');
-                tbody.innerHTML = '';
+                // Render table
+                renderTable(filteredItems);
                 
-                if (filteredItems.length > 0) {
-                    filteredItems.forEach(item => {
-                        const row = document.createElement('tr');
-                        
-                        const nameCell = document.createElement('td');
-                        nameCell.className = 'item-name';
-                        nameCell.textContent = item.itemName || 'Unknown Item';
-                        if (item.error) {
-                            nameCell.classList.add('error');
-                        }
-                        
-                        const priceCell = document.createElement('td');
-                        priceCell.className = 'price';
-                        if (item.currentPrice === 'N/A' || !item.currentPrice) {
-                            priceCell.classList.add('na');
-                            priceCell.textContent = 'N/A';
-                        } else {
-                            priceCell.textContent = item.currentPrice;
-                        }
-                        
-                        const closingTimeCell = document.createElement('td');
-                        closingTimeCell.className = 'closing-time';
-                        closingTimeCell.setAttribute('data-closing-time', item.closingTime || '');
-                        if (item.closingTime) {
-                            updateCountdown(closingTimeCell, item.closingTime);
-                        } else {
-                            closingTimeCell.textContent = 'N/A';
-                        }
-                        
-                        const linkCell = document.createElement('td');
-                        const link = document.createElement('a');
-                        link.href = item.url;
-                        link.target = '_blank';
-                        link.rel = 'noopener noreferrer';
-                        link.className = 'link';
-                        link.textContent = 'View';
-                        linkCell.appendChild(link);
-                        
-                        row.appendChild(nameCell);
-                        row.appendChild(priceCell);
-                        row.appendChild(closingTimeCell);
-                        row.appendChild(linkCell);
-                        
-                        tbody.appendChild(row);
-                    });
-                    
-                    document.getElementById('loading').style.display = 'none';
-                    document.getElementById('content').style.display = 'block';
-                } else {
-                    document.getElementById('loading').style.display = 'none';
-                    document.getElementById('content').style.display = 'block';
-                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem; color: #7f8c8d;">No items to display. Add URLs in the Manage URLs section above.</td></tr>';
-                }
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
             } catch (error) {
                 console.error('Error loading data:', error);
                 document.getElementById('loading').style.display = 'none';
@@ -686,6 +891,40 @@
                     updateCountdown(cell, closingTime);
                 }
             });
+        }
+        
+        async function triggerUpdate() {
+            const btn = document.getElementById('updateBtn');
+            const originalText = btn.textContent;
+            btn.textContent = 'Updating...';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch('/.netlify/functions/trigger-scrape', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    btn.textContent = 'Update Triggered!';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                        setTimeout(() => loadData(), 30000);
+                    }, 2000);
+                } else {
+                    throw new Error('Failed to trigger update');
+                }
+            } catch (error) {
+                console.error('Error triggering update:', error);
+                btn.textContent = 'Error - Try Again';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }, 2000);
+            }
         }
         
         loadData();

@@ -1,40 +1,55 @@
 {
-  "lastUpdated": "2025-12-21T07:36:26.543Z",
+  "lastUpdated": "2025-12-21T08:43:44.478Z",
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
       "itemName": "2008 Volkswagen Passat Komfort 2.0 TSI",
       "currentPrice": "$525.00",
-      "closingTime": "2025-12-22T02:18:01.079Z",
-      "timestamp": "2025-12-21T07:36:27.080Z"
+      "nextRequiredBid": "$575.00",
+      "lotFees": 334.12,
+      "buyersPremium": 78.75,
+      "closingTime": "2025-12-22T02:18:04.003Z",
+      "timestamp": "2025-12-21T08:43:45.003Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/8",
       "itemName": "2011 Jeep Grand Cherokee Laredo 4x4",
       "currentPrice": "$1,000.00",
-      "closingTime": "2025-12-22T01:47:00.262Z",
-      "timestamp": "2025-12-21T07:36:28.262Z"
+      "nextRequiredBid": "$1,050.00",
+      "lotFees": 434.3,
+      "buyersPremium": 150,
+      "closingTime": "2025-12-22T01:47:04.173Z",
+      "timestamp": "2025-12-21T08:43:47.173Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/18",
       "itemName": "2011 Chevrolet Malibu LS",
       "currentPrice": "$750.00",
-      "closingTime": "2025-12-22T01:57:00.441Z",
-      "timestamp": "2025-12-21T07:36:29.441Z"
+      "nextRequiredBid": "$800.00",
+      "lotFees": 417.1,
+      "buyersPremium": 112.5,
+      "closingTime": "2025-12-22T01:57:04.338Z",
+      "timestamp": "2025-12-21T08:43:49.338Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62481/item/4",
       "itemName": "2009 Toyota Highlander 4X4",
       "currentPrice": "$701.00",
-      "closingTime": "2025-12-22T02:08:00.646Z",
-      "timestamp": "2025-12-21T07:36:30.646Z"
+      "nextRequiredBid": "$751.00",
+      "lotFees": 391.7288,
+      "buyersPremium": 105.15,
+      "closingTime": "2025-12-22T02:08:04.518Z",
+      "timestamp": "2025-12-21T08:43:51.518Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/14",
       "itemName": "2014 Volkswagen Passat Treadline",
       "currentPrice": "$1,001.99",
-      "closingTime": "2025-12-22T01:53:00.811Z",
-      "timestamp": "2025-12-21T07:36:31.811Z"
+      "nextRequiredBid": "$1,076.99",
+      "lotFees": 434.436912,
+      "buyersPremium": 150.2985,
+      "closingTime": "2025-12-22T01:53:03.695Z",
+      "timestamp": "2025-12-21T08:43:53.695Z"
     }
   ]
 }
