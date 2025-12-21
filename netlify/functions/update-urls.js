@@ -47,6 +47,9 @@ exports.handler = async (event) => {
     }
 
     // Trigger the workflow to scrape immediately
+    // Add a small delay to ensure the commit is processed first
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
     const workflowResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/scrape.yml/dispatches`, {
       method: 'POST',
       headers: {

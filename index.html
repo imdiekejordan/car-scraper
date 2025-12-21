@@ -489,7 +489,15 @@
             return [];
         }
         
+        let isSaving = false;
+        
         async function saveUrls(urls) {
+            if (isSaving) {
+                console.log('Already saving URLs, skipping duplicate call');
+                return;
+            }
+            
+            isSaving = true;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(urls));
             await renderUrlList();
             
@@ -507,6 +515,8 @@
                 }
             } catch (error) {
                 console.error('Error updating URLs:', error);
+            } finally {
+                isSaving = false;
             }
         }
         
@@ -527,7 +537,7 @@
             }
         }
         
-        async function addUrl() {
+        function addUrl() {
             const input = document.getElementById('newUrlInput');
             const url = input.value.trim();
             
@@ -547,12 +557,10 @@
             }
             
             urls.push(url);
-            await saveUrls(urls);
+            saveUrls(urls);
             input.value = '';
             input.focus();
-            
-            // Trigger scrape after adding URL
-            await triggerUpdate();
+            loadData();
         }
         
         function removeUrl(urlToRemove) {
@@ -999,11 +1007,9 @@
         
         async function triggerUpdate() {
             const btn = document.getElementById('updateBtn');
-            const originalText = btn ? btn.textContent : '';
-            if (btn) {
-                btn.textContent = 'Updating...';
-                btn.disabled = true;
-            }
+            const originalText = btn.textContent;
+            btn.textContent = 'Updating...';
+            btn.disabled = true;
             
             try {
                 const response = await fetch('/.netlify/functions/trigger-scrape', {
@@ -1014,49 +1020,22 @@
                 });
                 
                 if (response.ok) {
-                    if (btn) {
-                        btn.textContent = 'Update Triggered!';
-                        setTimeout(() => {
-                            btn.textContent = originalText;
-                            btn.disabled = false;
-                            setTimeout(() => loadData(), 30000);
-                        }, 2000);
-                    } else {
-                        // Called from addUrl, show status message
-                        const statusMsg = document.getElementById('statusMessage');
-                        if (statusMsg) {
-                            statusMsg.textContent = 'Scrape triggered! Data will update in ~30 seconds.';
-                            statusMsg.style.display = 'block';
-                            statusMsg.style.color = '#27ae60';
-                            setTimeout(() => {
-                                statusMsg.style.display = 'none';
-                                setTimeout(() => loadData(), 30000);
-                            }, 3000);
-                        }
-                    }
+                    btn.textContent = 'Update Triggered!';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                        setTimeout(() => loadData(), 30000);
+                    }, 2000);
                 } else {
                     throw new Error('Failed to trigger update');
                 }
             } catch (error) {
                 console.error('Error triggering update:', error);
-                if (btn) {
-                    btn.textContent = 'Error - Try Again';
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                        btn.disabled = false;
-                    }, 2000);
-                } else {
-                    // Show error in status message
-                    const statusMsg = document.getElementById('statusMessage');
-                    if (statusMsg) {
-                        statusMsg.textContent = 'Error triggering scrape. Please try the Update button.';
-                        statusMsg.style.display = 'block';
-                        statusMsg.style.color = '#e74c3c';
-                        setTimeout(() => {
-                            statusMsg.style.display = 'none';
-                        }, 3000);
-                    }
-                }
+                btn.textContent = 'Error - Try Again';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }, 2000);
             }
         }
         
