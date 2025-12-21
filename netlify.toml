@@ -1,7 +1,8 @@
 [build]
   publish = "."
-  # Note: Builds are skipped when commit message contains [skip netlify]
-  # This is configured in GitHub Actions workflow to save build minutes
+  # Skip builds if only data.json changed (saves build minutes)
+  # Exit code 0 = skip build, non-zero = build
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)data.json'"
 
 [[redirects]]
   from = "/.netlify/functions/*"
