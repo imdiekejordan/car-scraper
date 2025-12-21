@@ -1137,9 +1137,11 @@
                 
                 const closingTimeCell = document.createElement('td');
                 closingTimeCell.className = 'closing-time';
-                closingTimeCell.setAttribute('data-closing-time', item.closingTime || '');
-                if (item.closingTime) {
-                    updateCountdown(closingTimeCell, item.closingTime);
+                // Store the closing time as ISO string for reliable parsing
+                const closingTimeISO = item.closingTime ? (item.closingTime instanceof Date ? item.closingTime.toISOString() : item.closingTime) : '';
+                closingTimeCell.setAttribute('data-closing-time', closingTimeISO);
+                if (closingTimeISO) {
+                    updateCountdown(closingTimeCell, closingTimeISO);
                 } else {
                     closingTimeCell.textContent = 'N/A';
                 }
