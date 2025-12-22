@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-22T00:48:20.069Z",
+  "lastUpdated": "2025-12-22T01:41:12.235Z",
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62482/item/3",
@@ -8,8 +8,8 @@
       "nextRequiredBid": "$1,350.00",
       "lotFees": 431.22,
       "buyersPremium": 191.25,
-      "closingTime": "2025-12-22T02:12:00.782Z",
-      "timestamp": "2025-12-22T00:48:20.783Z"
+      "closingTime": "2025-12-22T02:12:01.001Z",
+      "timestamp": "2025-12-22T01:41:13.001Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62482/item/4",
@@ -18,8 +18,8 @@
       "nextRequiredBid": "$1,725.00",
       "lotFees": 457.02,
       "buyersPremium": 247.5,
-      "closingTime": "2025-12-22T02:13:00.999Z",
-      "timestamp": "2025-12-22T00:48:22.999Z"
+      "closingTime": "2025-12-22T02:13:00.244Z",
+      "timestamp": "2025-12-22T01:41:15.244Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/3",
@@ -28,8 +28,8 @@
       "nextRequiredBid": "$1,575.00",
       "lotFees": 446.7,
       "buyersPremium": 225,
-      "closingTime": "2025-12-22T02:17:00.144Z",
-      "timestamp": "2025-12-22T00:48:25.144Z"
+      "closingTime": "2025-12-22T02:17:00.436Z",
+      "timestamp": "2025-12-22T01:41:17.436Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
@@ -38,8 +38,8 @@
       "nextRequiredBid": "$650.00",
       "lotFees": 339.28,
       "buyersPremium": 90,
-      "closingTime": "2025-12-22T02:18:00.306Z",
-      "timestamp": "2025-12-22T00:48:27.306Z"
+      "closingTime": "2025-12-22T02:18:00.636Z",
+      "timestamp": "2025-12-22T01:41:19.636Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/14",
@@ -48,28 +48,28 @@
       "nextRequiredBid": "$1,226.99",
       "lotFees": 444.756912,
       "buyersPremium": 172.7985,
-      "closingTime": "2025-12-22T01:53:00.459Z",
-      "timestamp": "2025-12-22T00:48:29.459Z"
+      "closingTime": "2025-12-22T01:53:00.837Z",
+      "timestamp": "2025-12-22T01:41:21.838Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/18",
       "itemName": "2011 Chevrolet Malibu LS",
       "currentPrice": "$950.00",
       "nextRequiredBid": "$1,000.00",
-      "lotFees": 430.86,
+      "lotFees": 375.5,
       "buyersPremium": 142.5,
-      "closingTime": "2025-12-22T01:57:00.612Z",
-      "timestamp": "2025-12-22T00:48:31.612Z"
+      "closingTime": "2025-12-22T01:57:01.001Z",
+      "timestamp": "2025-12-22T01:41:24.001Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/2",
       "itemName": "2006 Audi A4 Avant 2.0T Wagon AWD",
-      "currentPrice": "$500.00",
-      "nextRequiredBid": "$525.00",
-      "lotFees": 399.9,
-      "buyersPremium": 75,
-      "closingTime": "2025-12-22T01:41:00.756Z",
-      "timestamp": "2025-12-22T00:48:33.756Z"
+      "currentPrice": "$1,000.00",
+      "nextRequiredBid": "$1,050.00",
+      "lotFees": 375.5,
+      "buyersPremium": 150,
+      "closingTime": "2025-12-28T23:59:59.999Z",
+      "timestamp": "2025-12-22T01:41:26.190Z"
     }
   ]
 }
