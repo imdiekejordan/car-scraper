@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-22T03:21:56.539Z",
+  "lastUpdated": "2025-12-22T04:26:33.702Z",
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62482/item/3",
@@ -9,7 +9,7 @@
       "lotFees": 436.38,
       "buyersPremium": 202.5,
       "closingTime": null,
-      "timestamp": "2025-12-22T03:21:57.096Z"
+      "timestamp": "2025-12-22T04:26:34.500Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62482/item/4",
@@ -19,7 +19,7 @@
       "lotFees": 563.66,
       "buyersPremium": 480,
       "closingTime": null,
-      "timestamp": "2025-12-22T03:21:59.283Z"
+      "timestamp": "2025-12-22T04:26:36.682Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/3",
@@ -29,7 +29,7 @@
       "lotFees": 515.5,
       "buyersPremium": 375,
       "closingTime": null,
-      "timestamp": "2025-12-22T03:22:01.610Z"
+      "timestamp": "2025-12-22T04:26:38.850Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
@@ -39,7 +39,7 @@
       "lotFees": 346.15999999999997,
       "buyersPremium": 105,
       "closingTime": null,
-      "timestamp": "2025-12-22T03:22:03.809Z"
+      "timestamp": "2025-12-22T04:26:41.003Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/14",
@@ -49,7 +49,7 @@
       "lotFees": 503.16880000000003,
       "buyersPremium": 300.15,
       "closingTime": "2025-12-28T23:59:59.999Z",
-      "timestamp": "2025-12-22T03:22:05.975Z"
+      "timestamp": "2025-12-22T04:26:43.175Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/18",
@@ -59,7 +59,7 @@
       "lotFees": 250,
       "buyersPremium": 157.5,
       "closingTime": "2025-12-28T23:59:59.999Z",
-      "timestamp": "2025-12-22T03:22:08.129Z"
+      "timestamp": "2025-12-22T04:26:45.303Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/2",
@@ -69,7 +69,7 @@
       "lotFees": 375.5,
       "buyersPremium": 150,
       "closingTime": "2025-12-28T23:59:59.999Z",
-      "timestamp": "2025-12-22T03:22:10.320Z"
+      "timestamp": "2025-12-22T04:26:47.493Z"
     }
   ]
 }
