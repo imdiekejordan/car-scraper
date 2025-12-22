@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-22T00:20:12.833Z",
+  "lastUpdated": "2025-12-22T00:48:20.069Z",
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62482/item/3",
@@ -8,8 +8,8 @@
       "nextRequiredBid": "$1,350.00",
       "lotFees": 431.22,
       "buyersPremium": 191.25,
-      "closingTime": "2025-12-22T02:12:02.540Z",
-      "timestamp": "2025-12-22T00:20:15.540Z"
+      "closingTime": "2025-12-22T02:12:00.782Z",
+      "timestamp": "2025-12-22T00:48:20.783Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62482/item/4",
@@ -18,8 +18,8 @@
       "nextRequiredBid": "$1,725.00",
       "lotFees": 457.02,
       "buyersPremium": 247.5,
-      "closingTime": "2025-12-22T02:13:00.765Z",
-      "timestamp": "2025-12-22T00:20:17.765Z"
+      "closingTime": "2025-12-22T02:13:00.999Z",
+      "timestamp": "2025-12-22T00:48:22.999Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/3",
@@ -28,8 +28,8 @@
       "nextRequiredBid": "$1,575.00",
       "lotFees": 446.7,
       "buyersPremium": 225,
-      "closingTime": "2025-12-22T02:17:00.955Z",
-      "timestamp": "2025-12-22T00:20:19.955Z"
+      "closingTime": "2025-12-22T02:17:00.144Z",
+      "timestamp": "2025-12-22T00:48:25.144Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
@@ -38,18 +38,18 @@
       "nextRequiredBid": "$650.00",
       "lotFees": 339.28,
       "buyersPremium": 90,
-      "closingTime": "2025-12-22T02:18:01.212Z",
-      "timestamp": "2025-12-22T00:20:22.212Z"
+      "closingTime": "2025-12-22T02:18:00.306Z",
+      "timestamp": "2025-12-22T00:48:27.306Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/14",
       "itemName": "2014 Volkswagen Passat Treadline",
-      "currentPrice": "$1,076.99",
-      "nextRequiredBid": "$1,151.99",
-      "lotFees": 439.596912,
-      "buyersPremium": 161.5485,
-      "closingTime": "2025-12-22T01:53:00.387Z",
-      "timestamp": "2025-12-22T00:20:24.387Z"
+      "currentPrice": "$1,151.99",
+      "nextRequiredBid": "$1,226.99",
+      "lotFees": 444.756912,
+      "buyersPremium": 172.7985,
+      "closingTime": "2025-12-22T01:53:00.459Z",
+      "timestamp": "2025-12-22T00:48:29.459Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/18",
@@ -58,8 +58,8 @@
       "nextRequiredBid": "$1,000.00",
       "lotFees": 430.86,
       "buyersPremium": 142.5,
-      "closingTime": "2025-12-22T01:57:00.599Z",
-      "timestamp": "2025-12-22T00:20:26.599Z"
+      "closingTime": "2025-12-22T01:57:00.612Z",
+      "timestamp": "2025-12-22T00:48:31.612Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/2",
@@ -68,8 +68,8 @@
       "nextRequiredBid": "$525.00",
       "lotFees": 399.9,
       "buyersPremium": 75,
-      "closingTime": "2025-12-22T01:41:00.762Z",
-      "timestamp": "2025-12-22T00:20:28.762Z"
+      "closingTime": "2025-12-22T01:41:00.756Z",
+      "timestamp": "2025-12-22T00:48:33.756Z"
     }
   ]
 }
