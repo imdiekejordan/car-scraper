@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-01T12:39:30.235Z",
+  "lastUpdated": "2026-01-01T13:22:16.590Z",
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62482/item/3",
@@ -9,7 +9,7 @@
       "lotFees": 436.38,
       "buyersPremium": 202.5,
       "closingTime": null,
-      "timestamp": "2026-01-01T12:39:31.091Z"
+      "timestamp": "2026-01-01T13:22:17.456Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62482/item/4",
@@ -19,7 +19,7 @@
       "lotFees": 563.66,
       "buyersPremium": 480,
       "closingTime": null,
-      "timestamp": "2026-01-01T12:39:33.275Z"
+      "timestamp": "2026-01-01T13:22:19.644Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/3",
@@ -29,7 +29,7 @@
       "lotFees": 353.5,
       "buyersPremium": 375,
       "closingTime": null,
-      "timestamp": "2026-01-01T12:39:35.444Z"
+      "timestamp": "2026-01-01T13:22:21.805Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
@@ -39,7 +39,7 @@
       "lotFees": 308,
       "buyersPremium": 105,
       "closingTime": null,
-      "timestamp": "2026-01-01T12:39:37.604Z"
+      "timestamp": "2026-01-01T13:22:23.949Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/14",
@@ -49,7 +49,7 @@
       "lotFees": 503.16880000000003,
       "buyersPremium": 300.15,
       "closingTime": "2026-01-04T23:59:59.999Z",
-      "timestamp": "2026-01-01T12:39:39.756Z"
+      "timestamp": "2026-01-01T13:22:26.083Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/18",
@@ -59,7 +59,7 @@
       "lotFees": 250,
       "buyersPremium": 157.5,
       "closingTime": "2026-01-04T23:59:59.999Z",
-      "timestamp": "2026-01-01T12:39:41.901Z"
+      "timestamp": "2026-01-01T13:22:28.218Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/2",
@@ -69,7 +69,7 @@
       "lotFees": 375.5,
       "buyersPremium": 150,
       "closingTime": "2026-01-04T23:59:59.999Z",
-      "timestamp": "2026-01-01T12:39:44.101Z"
+      "timestamp": "2026-01-01T13:22:30.424Z"
     }
   ]
 }
