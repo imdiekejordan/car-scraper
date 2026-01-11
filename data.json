@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-10T23:50:43.204Z",
+  "lastUpdated": "2026-01-11T01:47:40.583Z",
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62482/item/3",
@@ -9,7 +9,7 @@
       "lotFees": 436.38,
       "buyersPremium": 202.5,
       "closingTime": null,
-      "timestamp": "2026-01-10T23:50:43.743Z"
+      "timestamp": "2026-01-11T01:47:41.400Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62482/item/4",
@@ -19,7 +19,7 @@
       "lotFees": 563.66,
       "buyersPremium": 480,
       "closingTime": null,
-      "timestamp": "2026-01-10T23:50:45.935Z"
+      "timestamp": "2026-01-11T01:47:43.580Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/3",
@@ -29,7 +29,7 @@
       "lotFees": 353.5,
       "buyersPremium": 375,
       "closingTime": null,
-      "timestamp": "2026-01-10T23:50:48.104Z"
+      "timestamp": "2026-01-11T01:47:45.739Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
@@ -39,7 +39,7 @@
       "lotFees": 308,
       "buyersPremium": 105,
       "closingTime": null,
-      "timestamp": "2026-01-10T23:50:50.263Z"
+      "timestamp": "2026-01-11T01:47:47.896Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/14",
@@ -48,8 +48,8 @@
       "nextRequiredBid": "$2,076.00",
       "lotFees": 503.16880000000003,
       "buyersPremium": 300.15,
-      "closingTime": "2026-01-11T23:59:59.999Z",
-      "timestamp": "2026-01-10T23:50:52.441Z"
+      "closingTime": "2026-01-18T23:59:59.999Z",
+      "timestamp": "2026-01-11T01:47:50.044Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/18",
@@ -58,8 +58,8 @@
       "nextRequiredBid": "$1,125.00",
       "lotFees": 250,
       "buyersPremium": 157.5,
-      "closingTime": "2026-01-11T23:59:59.999Z",
-      "timestamp": "2026-01-10T23:50:54.607Z"
+      "closingTime": "2026-01-18T23:59:59.999Z",
+      "timestamp": "2026-01-11T01:47:52.248Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/2",
@@ -68,8 +68,8 @@
       "nextRequiredBid": "$1,050.00",
       "lotFees": 375.5,
       "buyersPremium": 150,
-      "closingTime": "2026-01-11T23:59:59.999Z",
-      "timestamp": "2026-01-10T23:50:56.794Z"
+      "closingTime": "2026-01-18T23:59:59.999Z",
+      "timestamp": "2026-01-11T01:47:54.482Z"
     }
   ]
 }
