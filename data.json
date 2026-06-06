@@ -1,54 +1,75 @@
 {
-  "lastUpdated": "2026-06-06T17:11:10.316Z",
+  "lastUpdated": "2026-06-06T18:39:15.717Z",
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62482/item/3",
-      "itemName": "Error: Could not fetch",
-      "currentPrice": "N/A",
-      "timestamp": "2026-06-06T17:11:16.613Z",
-      "error": "Request failed with status code 403"
+      "itemName": "2015 Chevy Traverse LS for Sale in Park Rapids, MN | Online Auction | K-BID",
+      "currentPrice": "$1,350.00",
+      "nextRequiredBid": "$1,425.00",
+      "lotFees": 436.38,
+      "buyersPremium": 202.5,
+      "closingTime": null,
+      "timestamp": "2026-06-06T18:39:16.322Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62482/item/4",
-      "itemName": "Error: Could not fetch",
-      "currentPrice": "N/A",
-      "timestamp": "2026-06-06T17:11:24.689Z",
-      "error": "Request failed with status code 403"
+      "itemName": "2011 Cadillac SRX AWD for Sale in Park Rapids, MN | Online Auction | K-BID",
+      "currentPrice": "$3,200.00",
+      "nextRequiredBid": "$3,275.00",
+      "lotFees": 563.66,
+      "buyersPremium": 480,
+      "closingTime": null,
+      "timestamp": "2026-06-06T18:39:18.553Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/3",
-      "itemName": "Error: Could not fetch",
-      "currentPrice": "N/A",
-      "timestamp": "2026-06-06T17:11:32.764Z",
-      "error": "Request failed with status code 403"
+      "itemName": "2009 Toyota Camry for Sale in Park Rapids, MN | Online Auction | K-BID",
+      "currentPrice": "$2,500.00",
+      "nextRequiredBid": "$2,575.00",
+      "lotFees": 353.5,
+      "buyersPremium": 375,
+      "closingTime": null,
+      "timestamp": "2026-06-06T18:39:20.750Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
-      "itemName": "Error: Could not fetch",
-      "currentPrice": "N/A",
-      "timestamp": "2026-06-06T17:11:40.837Z",
-      "error": "Request failed with status code 403"
+      "itemName": "2008 Volkswagen Passat Komfort 2.0 TSI for Sale in Park Rapids, MN | Online Auction | K-BID",
+      "currentPrice": "$700.00",
+      "nextRequiredBid": "$750.00",
+      "lotFees": 308,
+      "buyersPremium": 105,
+      "closingTime": null,
+      "timestamp": "2026-06-06T18:39:22.907Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/14",
-      "itemName": "Error: Could not fetch",
-      "currentPrice": "N/A",
-      "timestamp": "2026-06-06T17:11:48.912Z",
-      "error": "Request failed with status code 403"
+      "itemName": "2014 Volkswagen Passat Treadline for Sale in Savage, MN | Online Auction | K-BID",
+      "currentPrice": "$2,001.00",
+      "nextRequiredBid": "$2,076.00",
+      "lotFees": 503.16880000000003,
+      "buyersPremium": 300.15,
+      "closingTime": null,
+      "timestamp": "2026-06-06T18:39:25.103Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/18",
-      "itemName": "Error: Could not fetch",
-      "currentPrice": "N/A",
-      "timestamp": "2026-06-06T17:11:56.985Z",
-      "error": "Request failed with status code 403"
+      "itemName": "2011 Chevrolet Malibu LS for Sale in Savage, MN | Online Auction | K-BID",
+      "currentPrice": "$1,050.00",
+      "nextRequiredBid": "$1,125.00",
+      "lotFees": 250,
+      "buyersPremium": 157.5,
+      "closingTime": null,
+      "timestamp": "2026-06-06T18:39:27.291Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/2",
-      "itemName": "Error: Could not fetch",
-      "currentPrice": "N/A",
-      "timestamp": "2026-06-06T17:12:05.059Z",
-      "error": "Request failed with status code 403"
+      "itemName": "2006 Audi A4 Avant 2.0T Wagon AWD for Sale in Savage, MN | Online Auction | K-BID",
+      "currentPrice": "$1,000.00",
+      "nextRequiredBid": "$1,050.00",
+      "lotFees": 375.5,
+      "buyersPremium": 150,
+      "closingTime": null,
+      "timestamp": "2026-06-06T18:39:29.544Z"
     }
   ]
 }
