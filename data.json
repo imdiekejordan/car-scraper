@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-18T23:18:43.032Z",
+  "lastUpdated": "2026-08-18T23:45:42.007Z",
   "items": [
     {
       "url": "https://www.k-bid.com/auction/62482/item/3",
@@ -9,7 +9,7 @@
       "lotFees": 436.38,
       "buyersPremium": 202.5,
       "closingTime": null,
-      "timestamp": "2026-08-18T23:18:43.342Z"
+      "timestamp": "2026-08-18T23:45:42.472Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62482/item/4",
@@ -19,7 +19,7 @@
       "lotFees": 563.66,
       "buyersPremium": 480,
       "closingTime": null,
-      "timestamp": "2026-08-18T23:18:45.469Z"
+      "timestamp": "2026-08-18T23:45:44.603Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/3",
@@ -29,7 +29,7 @@
       "lotFees": 353.5,
       "buyersPremium": 375,
       "closingTime": null,
-      "timestamp": "2026-08-18T23:18:47.574Z"
+      "timestamp": "2026-08-18T23:45:46.727Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62483/item/4",
@@ -39,7 +39,7 @@
       "lotFees": 308,
       "buyersPremium": 105,
       "closingTime": null,
-      "timestamp": "2026-08-18T23:18:49.669Z"
+      "timestamp": "2026-08-18T23:45:48.830Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/14",
@@ -49,7 +49,7 @@
       "lotFees": 503.16880000000003,
       "buyersPremium": 300.15,
       "closingTime": null,
-      "timestamp": "2026-08-18T23:18:51.858Z"
+      "timestamp": "2026-08-18T23:45:51.079Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/18",
@@ -59,7 +59,7 @@
       "lotFees": 250,
       "buyersPremium": 157.5,
       "closingTime": null,
-      "timestamp": "2026-08-18T23:18:54.007Z"
+      "timestamp": "2026-08-18T23:45:53.300Z"
     },
     {
       "url": "https://www.k-bid.com/auction/62603/item/2",
@@ -69,7 +69,7 @@
       "lotFees": 375.5,
       "buyersPremium": 150,
       "closingTime": null,
-      "timestamp": "2026-08-18T23:18:56.109Z"
+      "timestamp": "2026-08-18T23:45:55.420Z"
     }
   ]
 }
